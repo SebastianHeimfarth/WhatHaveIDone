@@ -1,24 +1,51 @@
 ﻿<views:MvxWpfView
-             x:Class="WhatHaveIDone.Views.TaskListView"
+    x:Class="WhatHaveIDone.Views.TaskListView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
-    xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+    xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf" xmlns:converter="clr-namespace:WhatHaveIDone.Converter"
     mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <StackPanel Margin="10">
-            <TextBlock Text="Task" />
+    d:DesignHeight="450" d:DesignWidth="800">
+    <views:MvxWpfView.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+    </views:MvxWpfView.Resources>
+
+    <StackPanel>
+        <StackPanel Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+            
+            <TextBlock Text="Start a new Task" />
             <TextBox Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 0 0 15" />
 
             <TextBlock Text="Comment" />
             <TextBox  Text="{Binding Comment, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Height="40" Margin="0 0 0 15" />
 
-            <Button mvx:Bi.nd="Command AddTaskCommand" IsEnabled="{Binding CanAddTask}" Width="100" HorizontalAlignment="Right" Margin="0 0 10 15">Add</Button>
+            <Button mvx:Bi.nd="Command StartTaskCommand"  IsEnabled="{Binding CanStartTask}" Width="100" HorizontalAlignment="Right" Margin="0 0 10 15">Start</Button>
 
-            <DataGrid ItemsSource="{Binding Tasks}" AutoGenerateColumns="True" HeadersVisibility="All" />
         </StackPanel>
-    </Grid>
+
+        <StackPanel Visibility="{Binding IsTaskStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+            <TextBlock>
+                <Run Text="{Binding CurrentTask.Name}"/>
+                <Run> is running since </Run>
+                <Run Text="{Binding CurrentTask.Begin}"/>
+            </TextBlock>
+            
+            <TextBlock Text="Paused" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <Button mvx:Bi.nd="Command StopTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}" Width="100" HorizontalAlignment="Right" Margin="0 0 10 15">Stop</Button>
+
+            <Button mvx:Bi.nd="Command ContinueTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" Width="100" HorizontalAlignment="Right" Margin="0 0 10 15">Continue</Button>
+            <Button mvx:Bi.nd="Command EndTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" Width="100" HorizontalAlignment="Right" Margin="0 0 10 15">End</Button>
+            
+
+        </StackPanel>
+
+        
+        <DataGrid  ItemsSource="{Binding Tasks}" AutoGenerateColumns="True" HeadersVisibility="All" />
+        
+        
+    </StackPanel>
 </views:MvxWpfView>

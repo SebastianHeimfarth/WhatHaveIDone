@@ -9,4 +9,8 @@
     <PackageReference Include="Shouldly" Version="4.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WhatHaveIDone.Core\WhatHaveIDone.Core.csproj" />
+  </ItemGroup>
+
 </Project>
