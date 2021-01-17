@@ -1,5 +1,6 @@
 ﻿using MvvmCross.Platforms.Wpf.Views;
 
+
 namespace WhatHaveIDone
 {
     /// <summary>
@@ -10,6 +11,12 @@ namespace WhatHaveIDone
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            Hide();
         }
     }
 }

@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WhatHaveIDone.Core\WhatHaveIDone.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\TrayIcon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
