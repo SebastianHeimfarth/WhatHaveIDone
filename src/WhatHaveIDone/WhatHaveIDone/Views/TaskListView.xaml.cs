@@ -1,4 +1,5 @@
 ﻿using MvvmCross.Platforms.Wpf.Views;
+using WhatHaveIDone.Core.ViewModels;
 
 namespace WhatHaveIDone.Views
 {
@@ -10,6 +11,16 @@ namespace WhatHaveIDone.Views
         public TaskListView()
         {
             InitializeComponent();
+
+            this.Loaded += TaskListView_Loaded;
+        }
+
+        private async void TaskListView_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if(DataContext is TaskListViewModel viewModel)
+            {
+                await viewModel.Load();
+            }
         }
     }
 }

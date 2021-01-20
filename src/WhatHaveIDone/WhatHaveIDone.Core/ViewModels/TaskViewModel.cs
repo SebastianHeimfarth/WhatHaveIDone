@@ -3,16 +3,26 @@ using System;
 
 namespace WhatHaveIDone.Core.ViewModels
 {
-    public class TaskModel : MvxViewModel
+    public class TaskViewModel : MvxViewModel
     {
         private string _name;
         private string _comment;
-        private DateTime? _begin;
+        private DateTime _begin;
         private DateTime? _end;
+        private Guid _id;
+
+        public Guid Id
+        {
+            get => _id;
+            set
+            {
+                SetProperty(ref _id, value);
+            }
+        }
 
         public string Name
         {
-            get => _name; 
+            get => _name;
             set
             {
                 SetProperty(ref _name, value);
@@ -20,15 +30,15 @@ namespace WhatHaveIDone.Core.ViewModels
         }
         public string Comment
         {
-            get => _comment; 
+            get => _comment;
             set
             {
                 SetProperty(ref _comment, value);
             }
         }
-        public DateTime? Begin
+        public DateTime Begin
         {
-            get => _begin; 
+            get => _begin;
             set
             {
                 SetProperty(ref _begin, value);
@@ -36,21 +46,12 @@ namespace WhatHaveIDone.Core.ViewModels
         }
         public DateTime? End
         {
-            get => _end; 
+            get => _end;
             set
             {
                 SetProperty(ref _end, value);
             }
         }
-
-        public TaskModel CreateContinuationTask()
-        {
-            return new TaskModel
-            {
-                Begin = DateTime.UtcNow,
-                Comment = Comment,
-                Name = Name
-            };
-        }
+     
     }
 }

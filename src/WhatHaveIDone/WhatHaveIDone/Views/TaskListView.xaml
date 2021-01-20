@@ -12,7 +12,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
     </views:MvxWpfView.Resources>
-
+    
     <StackPanel>
         <StackPanel Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
             

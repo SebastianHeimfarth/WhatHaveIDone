@@ -18,6 +18,8 @@ namespace WhatHaveIDone
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            IoCConfiguration.ConfigureDependencies();
+
             CreateSystemTray();
         }
 

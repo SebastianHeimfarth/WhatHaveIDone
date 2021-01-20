@@ -2,24 +2,49 @@
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using WhatHaveIDone.Core.Persistence;
+using WhatHaveIDone.Core.Util;
+using static WhatHaveIDone.Core.ViewModels.ViewModelMapper;
 
 namespace WhatHaveIDone.Core.ViewModels
 {
     public class TaskListViewModel : MvxViewModel
     {
         private string _comment;
-        private TaskModel _currentTask;
+        private TaskViewModel _currentTask;
         private string _taskName;
 
-        private ObservableCollection<TaskModel> _tasks = new ObservableCollection<TaskModel>();
+        private ObservableCollection<TaskViewModel> _tasks = new ObservableCollection<TaskViewModel>();
         private bool _isTaskPaused;
+        private readonly ITaskDbContext _taskDbContext;
 
-        public TaskListViewModel()
+        public TaskListViewModel(ITaskDbContext taskDbContext)
         {
-            StartTaskCommand = new MvxCommand(StartTask);
+            StartTaskCommand = new MvxCommand(async () => await StartTask());
             StopTaskCommand = new MvxCommand(StopTask);
-            EndTaskCommand = new MvxCommand(EndTask);
-            ContinueTaskCommand = new MvxCommand(ContinueTask);
+            EndTaskCommand = new MvxCommand(async () => await EndTask());
+            ContinueTaskCommand = new MvxCommand(async () => await ContinueTask());
+            _taskDbContext = taskDbContext;
+        }
+
+        public async Task Load()
+        {
+            var weekStart = DateTime.Today.GetStartOfWeek();
+            var endOfWeek = weekStart.AddDays(7);
+
+            var tasksForThisWeek = await _taskDbContext.GetTasksInIntervalAsync(weekStart, endOfWeek);
+
+            foreach(var task in tasksForThisWeek)
+            {
+                var taskViewModel = MapTaskToViewModel(task);
+                _tasks.Add(taskViewModel);
+
+                if(!taskViewModel.End.HasValue)
+                {
+                    CurrentTask = taskViewModel;
+                }
+            }
         }
 
         public bool CanStartTask => !string.IsNullOrEmpty(TaskName);
@@ -29,7 +54,7 @@ namespace WhatHaveIDone.Core.ViewModels
             set { SetProperty(ref _comment, value); }
         }
 
-        public TaskModel CurrentTask
+        public TaskViewModel CurrentTask
         {
             get { return _currentTask; }
             set { SetProperty(ref _currentTask, value); RaisePropertyChanged(() => IsTaskStarted); }
@@ -40,9 +65,9 @@ namespace WhatHaveIDone.Core.ViewModels
         public IMvxCommand StopTaskCommand { get; }
         public IMvxCommand ContinueTaskCommand { get; }
 
-        public void ContinueTask()
+        public async Task ContinueTask()
         {
-            CurrentTask = CurrentTask.CreateContinuationTask();
+            CurrentTask = await CreateContinuationTask();
             Tasks.Add(CurrentTask);
             IsTaskPaused = false;
         }
@@ -59,14 +84,19 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
-        public void EndTask()
+        public async Task EndTask()
         {
             CurrentTask.End = DateTime.UtcNow;
+
+            var taskModel = await _taskDbContext.GetTaskByIdAsync(CurrentTask.Id);
+            UpdateTaskModel(taskModel, CurrentTask);
+            await _taskDbContext.SaveChangesAsync();
+
             IsTaskPaused = false;
             CurrentTask = null;
         }
 
-        public ObservableCollection<TaskModel> Tasks
+        public ObservableCollection<TaskViewModel> Tasks
         {
             get { return _tasks; }
             set { SetProperty(ref _tasks, value); }
@@ -81,13 +111,24 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
-        public void StartTask()
+        private async Task<TaskViewModel> CreateContinuationTask()
         {
-            CurrentTask = new TaskModel() { Name = TaskName, Comment = Comment, Begin = DateTime.UtcNow };
+            var taskModel = await _taskDbContext.CreateTaskAsync(TaskName, Comment, DateTime.UtcNow);
+
+            return MapTaskToViewModel(taskModel);
+        }
+
+        public async Task StartTask()
+        {
+            var task = await _taskDbContext.CreateTaskAsync(TaskName, Comment, DateTime.UtcNow);
+
+            CurrentTask = MapTaskToViewModel(task);
             Tasks.Add(CurrentTask);
+
             TaskName = null;
             Comment = null;
         }
+
         public void StopTask()
         {
             CurrentTask.End = DateTime.UtcNow;
