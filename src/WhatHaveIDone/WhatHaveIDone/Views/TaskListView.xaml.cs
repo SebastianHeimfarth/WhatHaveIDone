@@ -17,7 +17,7 @@ namespace WhatHaveIDone.Views
 
         private async void TaskListView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if(DataContext is TaskListViewModel viewModel)
+            if(DataContext is TaskDayEditorViewModel viewModel)
             {
                 await viewModel.Load();
             }

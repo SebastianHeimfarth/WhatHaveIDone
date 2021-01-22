@@ -1,20 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MvvmCross;
 using MvvmCross.IoC;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using WhatHaveIDone.Core.Persistence;
 using WhatHaveIDone.Persistence;
 
 namespace WhatHaveIDone
 {
-    class IoCConfiguration
+    internal class IoCConfiguration
     {
         public static void ConfigureDependencies()
         {
             MvxIoCProvider.Initialize();
-            
+
             Mvx.IoCProvider.RegisterSingleton<ITaskDbContext>(() => CreateDataContext());
         }
 

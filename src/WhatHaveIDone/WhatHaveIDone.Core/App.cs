@@ -7,7 +7,7 @@ namespace WhatHaveIDone.Core
     {
         public override void Initialize()
         {
-            RegisterAppStart<TaskListViewModel>();
+            RegisterAppStart<TaskDayEditorViewModel>();
         }
     }
 }

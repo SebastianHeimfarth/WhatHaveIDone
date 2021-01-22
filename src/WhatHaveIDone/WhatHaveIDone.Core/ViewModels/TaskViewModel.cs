@@ -1,11 +1,13 @@
 ﻿using MvvmCross.ViewModels;
 using System;
+using WhatHaveIDone.Core.Models;
 
 namespace WhatHaveIDone.Core.ViewModels
 {
     public class TaskViewModel : MvxViewModel
     {
         private string _name;
+        private TaskCategory _category;
         private string _comment;
         private DateTime _begin;
         private DateTime? _end;
@@ -20,6 +22,15 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
+        public TaskCategory Category
+        {
+            get => _category;
+            set
+            {
+                SetProperty(ref _category, value);
+            }
+        }
+
         public string Name
         {
             get => _name;
@@ -28,6 +39,7 @@ namespace WhatHaveIDone.Core.ViewModels
                 SetProperty(ref _name, value);
             }
         }
+
         public string Comment
         {
             get => _comment;
@@ -36,6 +48,7 @@ namespace WhatHaveIDone.Core.ViewModels
                 SetProperty(ref _comment, value);
             }
         }
+
         public DateTime Begin
         {
             get => _begin;
@@ -44,6 +57,7 @@ namespace WhatHaveIDone.Core.ViewModels
                 SetProperty(ref _begin, value);
             }
         }
+
         public DateTime? End
         {
             get => _end;
