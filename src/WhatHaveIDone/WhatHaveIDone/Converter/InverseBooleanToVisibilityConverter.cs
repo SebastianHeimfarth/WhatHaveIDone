@@ -9,7 +9,7 @@ namespace WhatHaveIDone.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is bool booleanValue)
+            if (value is bool booleanValue)
             {
                 if (booleanValue)
                 {
@@ -18,7 +18,6 @@ namespace WhatHaveIDone.Converter
 
                 return Visibility.Visible;
             }
-
 
             throw new ArgumentException($"value must be boolean", nameof(value));
         }

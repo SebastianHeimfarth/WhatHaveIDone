@@ -1,9 +1,6 @@
-﻿using NSubstitute;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Shouldly;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WhatHaveIDone.Test.Persistence
@@ -12,9 +9,6 @@ namespace WhatHaveIDone.Test.Persistence
     {
         private static readonly DateTime _from = new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private static readonly DateTime _to = new DateTime(2021, 1, 2, 0, 0, 0, DateTimeKind.Utc);
-
-
-
 
         [Test]
         [TestCase(-35, -25, 0)]
@@ -59,6 +53,5 @@ namespace WhatHaveIDone.Test.Persistence
             //assert
             result.Count.ShouldBe(expectedResultCount);
         }
-        
     }
 }

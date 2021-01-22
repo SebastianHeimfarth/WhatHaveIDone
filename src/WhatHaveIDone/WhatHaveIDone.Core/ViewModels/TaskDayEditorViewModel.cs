@@ -1,14 +1,13 @@
 ﻿using MvvmCross.Commands;
 using MvvmCross.ViewModels;
 using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using WhatHaveIDone.Core.Persistence;
-
-using static WhatHaveIDone.Core.ViewModels.ViewModelMapper;
-using WhatHaveIDone.Core.Models;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using WhatHaveIDone.Core.Models;
+using WhatHaveIDone.Core.Persistence;
+using static WhatHaveIDone.Core.ViewModels.ViewModelMapper;
 
 namespace WhatHaveIDone.Core.ViewModels
 {

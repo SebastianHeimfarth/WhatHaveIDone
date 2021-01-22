@@ -1,12 +1,8 @@
-﻿using NSubstitute;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Shouldly;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WhatHaveIDone.Core.Persistence;
 using WhatHaveIDone.Core.ViewModels;
 using WhatHaveIDone.Persistence;
 using WhatHaveIDone.Test.Persistence;
@@ -35,7 +31,7 @@ namespace WhatHaveIDone.Test.ViewModel
 
             //assert
             sut.TaskStatistics.ShouldNotBeNull();
-            sut.TaskStatistics.Single(x => x.Category == category1).TotalMinutes.ShouldBe((1+2) * 60);
+            sut.TaskStatistics.Single(x => x.Category == category1).TotalMinutes.ShouldBe((1 + 2) * 60);
             sut.TaskStatistics.Single(x => x.Category == category2).TotalMinutes.ShouldBe(4 * 60);
         }
 
@@ -46,7 +42,6 @@ namespace WhatHaveIDone.Test.ViewModel
             var sut = await CreateTaskListViewModel();
             await DataContext.CreateTaskAsync("day1", "comment", _dayInLocalTime.ToUniversalTime());
             await DataContext.CreateTaskAsync("day2", "comment", _dayInLocalTime.AddDays(1).ToUniversalTime());
-
 
             //act
             await sut.ChangeDay(_dayInLocalTime.AddDays(1));
@@ -68,7 +63,6 @@ namespace WhatHaveIDone.Test.ViewModel
             //act
             await sut.Load();
 
-
             //assert
             sut.Tasks.Count().ShouldBe(3);
         }
@@ -78,7 +72,7 @@ namespace WhatHaveIDone.Test.ViewModel
         {
             //arrange
             var sut = await CreateTaskListViewModel();
-            
+
             var unfinishedTask = await DataContext.CreateTaskAsync("unfinishedTask", "comment", _dayInLocalTime.ToUniversalTime());
             var finishedTask = await DataContext.CreateTaskAsync("finishedTask", "comment", _dayInLocalTime.ToUniversalTime());
 
@@ -86,7 +80,6 @@ namespace WhatHaveIDone.Test.ViewModel
 
             //act
             await sut.Load();
-
 
             //assert
             sut.CurrentTask.Name.ShouldBe("unfinishedTask");
@@ -145,7 +138,7 @@ namespace WhatHaveIDone.Test.ViewModel
             //arrange
             var sut = await CreateTaskListViewModel();
             await StartTask(sut);
-            
+
             //act
             sut.StopTask();
             await sut.ContinueTask();

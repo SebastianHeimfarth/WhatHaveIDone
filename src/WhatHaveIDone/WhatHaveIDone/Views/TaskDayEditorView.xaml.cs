@@ -6,9 +6,9 @@ namespace WhatHaveIDone.Views
     /// <summary>
     /// Interaction logic for TaskListView.xaml
     /// </summary>
-    public partial class TaskListView : MvxWpfView
+    public partial class TaskDayEditorView : MvxWpfView
     {
-        public TaskListView()
+        public TaskDayEditorView()
         {
             InitializeComponent();
 
@@ -17,7 +17,7 @@ namespace WhatHaveIDone.Views
 
         private async void TaskListView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if(DataContext is TaskDayEditorViewModel viewModel)
+            if (DataContext is TaskDayEditorViewModel viewModel)
             {
                 await viewModel.Load();
             }

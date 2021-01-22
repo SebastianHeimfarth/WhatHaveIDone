@@ -6,12 +6,12 @@ namespace WhatHaveIDone.Core.ViewModels
     {
         public static TaskViewModel MapTaskToViewModel(TaskModel task)
         {
-            return new TaskViewModel 
-            { 
-                Begin = task.Begin, 
-                End = task.End, 
-                Id = task.Id, 
-                Comment = task.Comment, 
+            return new TaskViewModel
+            {
+                Begin = task.Begin,
+                End = task.End,
+                Id = task.Id,
+                Comment = task.Comment,
                 Name = task.Name,
                 Category = task.Category
             };

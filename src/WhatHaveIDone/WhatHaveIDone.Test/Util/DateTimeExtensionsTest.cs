@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
 using Shouldly;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using WhatHaveIDone.Core.Util;
 
 namespace WhatHaveIDone.Test.Util
