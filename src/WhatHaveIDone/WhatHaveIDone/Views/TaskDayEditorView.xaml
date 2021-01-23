@@ -41,9 +41,6 @@
             
         </Style>
         
-        
-
-
         <Style TargetType="Button">
             <Setter Property="Background" Value="#2c78a8" />
             <Setter Property="Height" Value="40"/>
@@ -78,8 +75,8 @@
             <Setter Property="Height" Value="30"/>
             <Setter Property="FontSize" Value="25"/>
             <Setter Property="FontFamily" Value="Arial"/>
-            <Setter Property="ToolTip" Value="Hide Window"/>
-            <Setter Property="Background" Value="#272829" />
+            <Setter Property="ToolTip" Value="Close (App will still run in Systemtray)"/>
+            <Setter Property="Background" Value="#59585E" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -101,8 +98,6 @@
         <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
     </views:MvxWpfView.Resources>
 
-
-
     <DockPanel MouseLeftButtonDown="DockPanel_MouseLeftButtonDown">
         <Grid DockPanel.Dock="Top" Margin="0 -10 0 10">
             <DockPanel Height="50"
@@ -118,7 +113,7 @@
                     
                     Click="MinimizeButton_Click"
                 >
-                    <Grid Margin="10 5 10 5" Name="parent">
+                    <Grid Margin="13 8 13 8" Name="parent">
                         <Line  X1="0" Y1="0" X2="{Binding ElementName='parent', Path='ActualWidth'}" Y2="{Binding ElementName='parent', Path='ActualHeight'}" Stroke="Black" StrokeThickness="2" />
                         <Line  X1="0" Y1="{Binding ElementName='parent', Path='ActualHeight'}" X2="{Binding ElementName='parent', Path='ActualWidth'}" Y2="0" Stroke="Black" StrokeThickness="2" />
                     </Grid>
