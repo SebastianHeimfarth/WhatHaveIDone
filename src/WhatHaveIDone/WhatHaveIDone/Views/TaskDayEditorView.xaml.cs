@@ -1,4 +1,6 @@
 ﻿using MvvmCross.Platforms.Wpf.Views;
+using System.Windows;
+using System.Windows.Media;
 using WhatHaveIDone.Core.ViewModels;
 
 namespace WhatHaveIDone.Views
@@ -21,6 +23,33 @@ namespace WhatHaveIDone.Views
             {
                 await viewModel.Load();
             }
+        }
+
+        private void MinimizeButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            GetParentWindow(this)?.Hide();
+        }
+
+        private static MvxWindow GetParentWindow(DependencyObject dependencyObject)
+        {
+            var parent = VisualTreeHelper.GetParent(dependencyObject);
+
+            if(parent is MvxWindow window)
+            {
+                return window;
+            }
+
+            if(parent == null)
+            {
+                return null;
+            }
+
+            return GetParentWindow(parent);
+        }
+
+        private void DockPanel_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            GetParentWindow(this).DragMove();
         }
     }
 }

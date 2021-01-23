@@ -26,10 +26,10 @@ namespace WhatHaveIDone.Core.ViewModels
         public TaskDayEditorViewModel(ITaskDbContext taskDbContext)
         {
             DayInLocalTime = DateTime.Today;
-            StartTaskCommand = new MvxCommand(async () => await StartTask());
+            StartTaskCommand = new MvxAsyncCommand(StartTask);
             StopTaskCommand = new MvxCommand(StopTask);
-            EndTaskCommand = new MvxCommand(async () => await EndTask());
-            ContinueTaskCommand = new MvxCommand(async () => await ContinueTask());
+            EndTaskCommand = new MvxAsyncCommand(EndTask);
+            ContinueTaskCommand = new MvxAsyncCommand(ContinueTask);
             _taskDbContext = taskDbContext;
 
             _tasks.CollectionChanged += OnTaskCollectionChanged;
@@ -43,6 +43,7 @@ namespace WhatHaveIDone.Core.ViewModels
                 SetProperty(ref _selectedTask, value);
             }
         }
+        
 
         public bool CanStartTask => !string.IsNullOrEmpty(TaskName);
 

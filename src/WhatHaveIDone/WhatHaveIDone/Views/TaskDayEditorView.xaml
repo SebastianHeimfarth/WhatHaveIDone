@@ -10,37 +10,169 @@
     mc:Ignorable="d"
     d:DesignHeight="450" d:DesignWidth="800">
     <views:MvxWpfView.Resources>
+        
+        <Style TargetType="DockPanel">
+            <Setter Property="Background" Value="#59585E"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+        </Style>
+
+        <Style x:Key="TextBoxLabelStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="10 0 0 2"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+        </Style>
+
+        
+        <Style x:Key="TextInputStyle" TargetType="TextBox">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+
+            <Setter Property="Background" Value="#5f87a1"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Arial"/>
+            <Setter Property="Margin" Value="10 0 10 15"/>
+            
+        </Style>
+        
+        
+
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#2c78a8" />
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Margin" Value="10 5 10 5"/>
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="gd" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+                            </ContentPresenter>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5f95b8" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#14384f" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="FontFamily" Value="Arial"/>
+            <Setter Property="ToolTip" Value="Hide Window"/>
+            <Setter Property="Background" Value="#272829" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="gd" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+                            </ContentPresenter>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5f95b8" TargetName="gd"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
     </views:MvxWpfView.Resources>
 
-    <StackPanel>
-        <StackPanel Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
 
-            <TextBlock Text="Start a new Task" />
-            <TextBox Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 0 0 15" />
 
-            <TextBlock Text="Comment" />
-            <TextBox  Text="{Binding Comment, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Height="40" Margin="0 0 0 15" />
+    <DockPanel MouseLeftButtonDown="DockPanel_MouseLeftButtonDown">
+        <Grid DockPanel.Dock="Top" Margin="0 -10 0 10">
+            <DockPanel Height="50"
+                VerticalAlignment="Top">
 
-            <Button mvx:Bi.nd="Command StartTaskCommand"  IsEnabled="{Binding CanStartTask}" Width="100" HorizontalAlignment="Right" Margin="0 0 10 15">Start</Button>
-        </StackPanel>
+                <TextBlock DockPanel.Dock="Left" FontSize="15" FontStyle="Italic" FontFamily="Arial" >What have I done?</TextBlock>
 
-        <StackPanel Visibility="{Binding IsTaskStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button x:Name="MinimizeButton"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource CloseButtonStyle}"
+                    KeyboardNavigation.IsTabStop="False"
+                    
+                    Click="MinimizeButton_Click"
+                >
+                    <Grid Margin="10 5 10 5" Name="parent">
+                        <Line  X1="0" Y1="0" X2="{Binding ElementName='parent', Path='ActualWidth'}" Y2="{Binding ElementName='parent', Path='ActualHeight'}" Stroke="Black" StrokeThickness="2" />
+                        <Line  X1="0" Y1="{Binding ElementName='parent', Path='ActualHeight'}" X2="{Binding ElementName='parent', Path='ActualWidth'}" Y2="0" Stroke="Black" StrokeThickness="2" />
+                    </Grid>
+                </Button>
+            </DockPanel>
+        </Grid>
 
-            <TextBlock>
-                <Run Text="{Binding CurrentTask.Name}" />
+
+        <StackPanel DockPanel.Dock="Bottom">
+            <StackPanel Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+
+                <TextBlock Text="Start a new Task" />
+
+                <TextBlock Text="Name" Style="{StaticResource TextBoxLabelStyle}"/>
+                <TextBox x:Name="TaskNameTextBox"  Style="{StaticResource TextInputStyle}" HorizontalAlignment="Left" Width="100"  Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+
+                <TextBlock Text="Comment" Style="{StaticResource TextBoxLabelStyle}"/>
+                <TextBox  Text="{Binding Comment, Mode=TwoWay}"  Style="{StaticResource TextInputStyle}" TextWrapping="Wrap" AcceptsReturn="True" Height="40"  />
+
+                <Button mvx:Bi.nd="Command StartTaskCommand"  IsEnabled="{Binding CanStartTask}" HorizontalAlignment="Right" >Start</Button>
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding IsTaskStarted, Converter={StaticResource BooleanToVisibilityConverter}}" MinHeight="150">
+
+                <DockPanel >
+                    <TextBlock>
+                <Run Text="{Binding CurrentTask.Name}" FontWeight="Bold" />
                 <Run> is running since </Run>
-                <Run Text="{Binding CurrentTask.Begin}" />
-            </TextBlock>
+                <Run Text="{Binding CurrentTask.Begin, StringFormat=HH:mm}" />
+                    </TextBlock>
 
-            <TextBlock Text="Paused" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <Button mvx:Bi.nd="Command StopTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}" Width="100" HorizontalAlignment="Right" Margin="0 0 10 15">Stop</Button>
+                    <TextBlock Text="*Paused*" Foreground="DarkOrange" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-            <Button mvx:Bi.nd="Command ContinueTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" Width="100" HorizontalAlignment="Right" Margin="0 0 10 15">Continue</Button>
-            <Button mvx:Bi.nd="Command EndTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" Width="100" HorizontalAlignment="Right" Margin="0 0 10 15">End</Button>
+                    <StackPanel HorizontalAlignment="Right" DockPanel.Dock="Right">
+                        <Button mvx:Bi.nd="Command StopTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}"  >Stop</Button>
+
+                        <Button mvx:Bi.nd="Command ContinueTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" >Continue</Button>
+                        <Button mvx:Bi.nd="Command EndTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}">End</Button>
+                    </StackPanel>
+                </DockPanel>
+
+
+
+            </StackPanel>
+
+            <DataGrid  ItemsSource="{Binding Tasks}" AutoGenerateColumns="True" HeadersVisibility="All" />
         </StackPanel>
 
-        <DataGrid  ItemsSource="{Binding Tasks}" AutoGenerateColumns="True" HeadersVisibility="All" />
-    </StackPanel>
+
+    </DockPanel>
+
+
+
+
+
+    
 </views:MvxWpfView>
