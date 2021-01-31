@@ -21,7 +21,9 @@ namespace WhatHaveIDone.Persistence
 
         public async Task<TaskModel> CreateTaskAsync(string taskName, string comment, DateTime begin)
         {
-            var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin };
+            var defaultCategory = await TaskCategories.SingleAsync(x => x.Name == "Default");
+
+            var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin, Category = defaultCategory};
 
             await Tasks.AddAsync(task);
             await SaveChangesAsync();
@@ -30,7 +32,7 @@ namespace WhatHaveIDone.Persistence
 
         public Task<IReadOnlyList<TaskCategory>> GetAllTaskCategories()
         {
-            return Tasks.ToListAsync().ContinueWith(x => (IReadOnlyList<TaskCategory>)x.Result);
+            return TaskCategories.ToListAsync().ContinueWith(x => (IReadOnlyList<TaskCategory>)x.Result);
         }
 
         public Task<TaskModel> GetTaskByIdAsync(Guid id)
@@ -63,12 +65,12 @@ namespace WhatHaveIDone.Persistence
                 entity.HasKey(e => e.Id);
                 entity.Property(x => x.Color)
                     .HasConversion(colorToIntegerConverter);
-
+                
                 entity.HasData(
+               new TaskCategory { Name = "Default", Color = Color.Beige, Id = Guid.Parse("CCC60A19-6231-4486-94B0-6F6F3C093442") },
                     new TaskCategory { Name = "Work", Color = Color.Red, Id = Guid.Parse("31F59466-711A-46FE-B3F9-D6DB633440B1") },
                     new TaskCategory { Name = "Meeting", Color = Color.Orange, Id = Guid.Parse("44435569-C463-40AF-8F78-34CDBE035D8D") },
                     new TaskCategory { Name = "Pause", Color = Color.Green, Id = Guid.Parse("D57D7417-C7F2-4872-A0D6-1D68C9BDC13A") }
-
                 );
             });
         }

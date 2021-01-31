@@ -1,4 +1,5 @@
 ﻿using MvvmCross.Platforms.Wpf.Views;
+using WhatHaveIDone.Views;
 
 namespace WhatHaveIDone
 {
@@ -15,13 +16,14 @@ namespace WhatHaveIDone
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if(Content is ICleanupOnClose cleanup)
+            {
+                cleanup.OnBeforeClosed();
+            }
+
             e.Cancel = true;
             Hide();
         }
 
-        private void MinimizeButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Hide();
-        }
     }
 }

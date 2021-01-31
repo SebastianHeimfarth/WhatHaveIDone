@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="WhatHaveIDone.CustomControls.TaskTimelineControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WhatHaveIDone.CustomControls" 
+             xmlns:converter="clr-namespace:WhatHaveIDone.Converter"
+             mc:Ignorable="d" 
+             x:Name="_timeLineControl"
+             d:DesignHeight="450" d:DesignWidth="800"
+             >
+    <UserControl.Resources>
+        <converter:DrawingColorToBrushConverter x:Key="DrawingColorToBrushConverter" />
+        <converter:TaskViewModelToToolTipConverter x:Key="TaskViewModelToToolTipConverter" />
+        <converter:TaskLeftOffsetConverter x:Key="LeftOffsetConverter" />
+        <converter:TaskWidthConverter x:Key="WidthConverter" />
+        <converter:IsSelectedTaskConverter x:Key="IsSelectedTaskConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Canvas x:Name="_canvas"  Margin="0 5 0 5" ClipToBounds="True" Panel.ZIndex="2"  />
+
+        <ItemsControl x:Name="_itemsControl" ItemsSource="{Binding Path=DataContext.Tasks, Mode=OneWay}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas ClipToBounds="True" Panel.ZIndex="1"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+
+                    <Rectangle Stroke="#e08e09"  Fill="{Binding Path=Category.Color, Converter={StaticResource DrawingColorToBrushConverter}}"  Height="{Binding ActualHeight, ElementName=_canvas, Mode=OneWay}" >
+                        <Rectangle.StrokeThickness>
+                            <MultiBinding Converter="{StaticResource IsSelectedTaskConverter}" Mode="OneWay">
+                                <Binding Path="."/>
+                                <Binding Path="SelectedTask" ElementName="_timeLineControl"/>
+                            </MultiBinding>
+                        </Rectangle.StrokeThickness>
+                        <Rectangle.ToolTip>
+                            <MultiBinding Converter="{StaticResource TaskViewModelToToolTipConverter}">
+                                <Binding Path="Name"/>
+                                <Binding Path="Begin"/>
+                                <Binding Path="End"/>
+                            </MultiBinding>
+                        </Rectangle.ToolTip>
+                        <Rectangle.InputBindings>
+                            <MouseBinding Gesture="LeftClick" Command="{Binding TaskClicked, ElementName=_timeLineControl}" CommandParameter="{Binding}" />
+                        </Rectangle.InputBindings>
+                        <Rectangle.Margin>
+                            <MultiBinding Converter="{StaticResource LeftOffsetConverter}" Mode="OneWay">
+                                <Binding Path="ActualWidth" ElementName="_timeLineControl"/>
+                                <Binding Path="TimeLineStart" ElementName="_timeLineControl"/>
+                                <Binding Path="TimeLineEnd" ElementName="_timeLineControl"/>
+                                <Binding Path="Begin"/>
+                            </MultiBinding>
+                        </Rectangle.Margin>
+                        <Rectangle.Width>
+                            <MultiBinding Converter="{StaticResource WidthConverter}" Mode="OneWay">
+                                <Binding Path="ActualWidth" ElementName="_timeLineControl"/>
+                                <Binding Path="TimeLineStart" ElementName="_timeLineControl"/>
+                                <Binding Path="TimeLineEnd" ElementName="_timeLineControl"/>
+                                <Binding Path="Begin"/>
+                                <Binding Path="End"/>
+                            </MultiBinding>
+                        </Rectangle.Width>
+                    </Rectangle>
+                    
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </Grid>
+</UserControl>

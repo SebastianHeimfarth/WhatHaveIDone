@@ -5,7 +5,7 @@ using WhatHaveIDone.Core.Models;
 
 namespace WhatHaveIDone.Core.Persistence
 {
-    public interface ITaskDbContext
+    public interface ITaskDbContext : IDisposable
     {
         Task<IReadOnlyList<TaskCategory>> GetAllTaskCategories();
 

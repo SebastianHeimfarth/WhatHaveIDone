@@ -1,9 +1,15 @@
-﻿using MvvmCross.Core;
+﻿using MvvmCross;
+using MvvmCross.Core;
 using MvvmCross.Platforms.Wpf.Core;
 using MvvmCross.Platforms.Wpf.Views;
 using System;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Forms;
+using WhatHaveIDone.Core.Persistence;
+
+[assembly:InternalsVisibleTo("WhatHaveIDone.Test")]
+[assembly:InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace WhatHaveIDone
 {

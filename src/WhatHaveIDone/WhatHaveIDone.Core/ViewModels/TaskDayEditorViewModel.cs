@@ -13,14 +13,21 @@ namespace WhatHaveIDone.Core.ViewModels
 {
     public class TaskDayEditorViewModel : MvxViewModel
     {
+        private readonly ObservableCollection<TaskCategory> _categories = new ObservableCollection<TaskCategory>();
         private readonly ITaskDbContext _taskDbContext;
         private readonly ObservableCollection<TaskViewModel> _tasks = new ObservableCollection<TaskViewModel>();
         private string _comment;
+
         private TaskViewModel _currentTask;
+
         private DateTime _dayInLocalTime;
+
         private bool _isTaskPaused;
-        private string _taskName;
+
         private TaskViewModel _selectedTask;
+
+        private string _taskName;
+
         private IReadOnlyList<TaskStatisticViewModel> _taskStatistics;
 
         public TaskDayEditorViewModel(ITaskDbContext taskDbContext)
@@ -34,16 +41,6 @@ namespace WhatHaveIDone.Core.ViewModels
 
             _tasks.CollectionChanged += OnTaskCollectionChanged;
         }
-
-        public TaskViewModel SelectedTask
-        {
-            get => _selectedTask;
-            set
-            {
-                SetProperty(ref _selectedTask, value);
-            }
-        }
-        
 
         public bool CanStartTask => !string.IsNullOrEmpty(TaskName);
 
@@ -66,11 +63,19 @@ namespace WhatHaveIDone.Core.ViewModels
             get => _dayInLocalTime;
             private set
             {
-                SetProperty(ref _dayInLocalTime, value);
+                if (SetProperty(ref _dayInLocalTime, value))
+                {
+                    RaisePropertyChanged(() => DayUtc);
+                    RaisePropertyChanged(() => EndUtc);
+                }
             }
         }
 
+        public DateTime DayUtc => DayInLocalTime.ToUniversalTime();
+
         public IMvxCommand EndTaskCommand { get; }
+
+        public DateTime EndUtc => DayUtc.Add(TimeLineLength);
 
         public bool IsTaskPaused
         {
@@ -82,6 +87,19 @@ namespace WhatHaveIDone.Core.ViewModels
         }
 
         public bool IsTaskStarted => CurrentTask != null;
+
+        public TaskViewModel SelectedTask
+        {
+            get => _selectedTask;
+            set
+            {
+                if (_selectedTask != null)
+                {
+                    UpdateTask(_selectedTask).Wait();
+                }
+                SetProperty(ref _selectedTask, value);
+            }
+        }
 
         public IMvxCommand StartTaskCommand { get; }
 
@@ -108,6 +126,8 @@ namespace WhatHaveIDone.Core.ViewModels
             set { SetProperty(ref _taskStatistics, value); }
         }
 
+        public TimeSpan TimeLineLength => TimeSpan.FromHours(24);
+
         public Task ChangeDay(DateTime localDateTime)
         {
             DayInLocalTime = localDateTime;
@@ -124,10 +144,7 @@ namespace WhatHaveIDone.Core.ViewModels
         public async Task EndTask()
         {
             CurrentTask.End = DateTime.UtcNow;
-
-            var taskModel = await _taskDbContext.GetTaskByIdAsync(CurrentTask.Id);
-            UpdateTaskModel(taskModel, CurrentTask);
-            await _taskDbContext.SaveChangesAsync();
+            await UpdateTask(CurrentTask);
 
             IsTaskPaused = false;
             CurrentTask = null;
@@ -135,6 +152,12 @@ namespace WhatHaveIDone.Core.ViewModels
 
         public async Task Load()
         {
+            var taskCategories = await _taskDbContext.GetAllTaskCategories();
+            foreach (var category in taskCategories)
+            {
+                _categories.Add(category);
+            }
+
             var tasksForThisWeek = await _taskDbContext.GetTasksInIntervalAsync(DayInLocalTime.Date.ToUniversalTime(), DayInLocalTime.Date.AddDays(1).ToUniversalTime());
 
             foreach (var task in tasksForThisWeek)
@@ -149,6 +172,13 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
+        public async Task OnBeforeClosing()
+        {
+            if(SelectedTask != null)
+            {
+                await UpdateTask(SelectedTask);
+            }
+        }
         public async Task StartTask()
         {
             var task = await _taskDbContext.CreateTaskAsync(TaskName, Comment, DateTime.UtcNow);
@@ -183,6 +213,13 @@ namespace WhatHaveIDone.Core.ViewModels
                     Category = x.Key,
                     TotalMinutes = Convert.ToInt32(x.Sum(y => (y.End.Value - y.Begin).TotalMinutes))
                 }).ToList();
+        }
+
+        private async Task UpdateTask(TaskViewModel taskViewModel)
+        {
+            var taskModel = await _taskDbContext.GetTaskByIdAsync(taskViewModel.Id);
+            UpdateTaskModel(taskModel, taskViewModel);
+            await _taskDbContext.SaveChangesAsync();
         }
     }
 

@@ -66,5 +66,6 @@ namespace WhatHaveIDone.Core.ViewModels
                 SetProperty(ref _end, value);
             }
         }
+
     }
 }
