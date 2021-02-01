@@ -19,11 +19,9 @@ namespace WhatHaveIDone.Persistence
         public virtual DbSet<TaskModel> Tasks { get; set; }
         public virtual DbSet<TaskCategory> TaskCategories { get; set; }
 
-        public async Task<TaskModel> CreateTaskAsync(string taskName, string comment, DateTime begin)
+        public async Task<TaskModel> CreateTaskAsync(string taskName, TaskCategory category, string comment, DateTime begin)
         {
-            var defaultCategory = await TaskCategories.SingleAsync(x => x.Name == "Default");
-
-            var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin, Category = defaultCategory};
+            var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin, Category = category};
 
             await Tasks.AddAsync(task);
             await SaveChangesAsync();

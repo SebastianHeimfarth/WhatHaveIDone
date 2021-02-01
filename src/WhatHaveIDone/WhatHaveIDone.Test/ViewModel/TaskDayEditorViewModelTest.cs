@@ -13,6 +13,7 @@ namespace WhatHaveIDone.Test.ViewModel
     {
         private const string TaskName = "TaskName";
         private readonly DateTime _dayInLocalTime = new DateTime(2021, 1, 1);
+        private readonly Core.Models.TaskCategory _defaultCategory = new Core.Models.TaskCategory();
 
         private TaskDbContext DataContext { get; set; }
 
@@ -40,8 +41,8 @@ namespace WhatHaveIDone.Test.ViewModel
         {
             //arrange
             var sut = await CreateTaskListViewModel();
-            await DataContext.CreateTaskAsync("day1", "comment", _dayInLocalTime.ToUniversalTime());
-            await DataContext.CreateTaskAsync("day2", "comment", _dayInLocalTime.AddDays(1).ToUniversalTime());
+            await DataContext.CreateTaskAsync("day1", _defaultCategory, "comment", _dayInLocalTime.ToUniversalTime());
+            await DataContext.CreateTaskAsync("day2", _defaultCategory, "comment", _dayInLocalTime.AddDays(1).ToUniversalTime());
 
             //act
             await sut.ChangeDay(_dayInLocalTime.AddDays(1));
@@ -55,10 +56,10 @@ namespace WhatHaveIDone.Test.ViewModel
         {
             //arrange
             var sut = await CreateTaskListViewModel();
-            await DataContext.CreateTaskAsync("task1", "comment", _dayInLocalTime.ToUniversalTime());
-            await DataContext.CreateTaskAsync("task2", "comment", _dayInLocalTime.ToUniversalTime());
-            await DataContext.CreateTaskAsync("task3", "comment", _dayInLocalTime.ToUniversalTime());
-            await DataContext.CreateTaskAsync("taskForOtherDay", "comment", _dayInLocalTime.AddDays(1));
+            await DataContext.CreateTaskAsync("task1", _defaultCategory, "comment", _dayInLocalTime.ToUniversalTime());
+            await DataContext.CreateTaskAsync("task2", _defaultCategory, "comment", _dayInLocalTime.ToUniversalTime());
+            await DataContext.CreateTaskAsync("task3", _defaultCategory, "comment", _dayInLocalTime.ToUniversalTime());
+            await DataContext.CreateTaskAsync("taskForOtherDay", _defaultCategory, "comment", _dayInLocalTime.AddDays(1));
 
             //act
             await sut.Load();
@@ -73,8 +74,8 @@ namespace WhatHaveIDone.Test.ViewModel
             //arrange
             var sut = await CreateTaskListViewModel();
 
-            var unfinishedTask = await DataContext.CreateTaskAsync("unfinishedTask", "comment", _dayInLocalTime.ToUniversalTime());
-            var finishedTask = await DataContext.CreateTaskAsync("finishedTask", "comment", _dayInLocalTime.ToUniversalTime());
+            var unfinishedTask = await DataContext.CreateTaskAsync("unfinishedTask", _defaultCategory, "comment", _dayInLocalTime.ToUniversalTime());
+            var finishedTask = await DataContext.CreateTaskAsync("finishedTask", _defaultCategory, "comment", _dayInLocalTime.ToUniversalTime());
 
             finishedTask.End = finishedTask.Begin.AddHours(1);
 

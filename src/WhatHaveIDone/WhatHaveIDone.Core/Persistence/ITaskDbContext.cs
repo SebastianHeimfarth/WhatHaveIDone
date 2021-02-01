@@ -11,7 +11,7 @@ namespace WhatHaveIDone.Core.Persistence
 
         Task<IReadOnlyList<TaskModel>> GetTasksInIntervalAsync(DateTime start, DateTime end);
 
-        Task<TaskModel> CreateTaskAsync(string taskName, string comment, DateTime utcNow);
+        Task<TaskModel> CreateTaskAsync(string taskName, TaskCategory category, string comment, DateTime utcNow);
 
         Task<TaskModel> GetTaskByIdAsync(Guid id);
 

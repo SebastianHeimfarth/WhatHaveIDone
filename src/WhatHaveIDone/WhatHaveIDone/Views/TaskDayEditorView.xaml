@@ -42,7 +42,21 @@
             <Setter Property="Margin" Value="10 0 10 15"/>
             
         </Style>
-        
+
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+
+            <Setter Property="Background" Value="#5f87a1"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontFamily" Value="Arial"/>
+            <Setter Property="Margin" Value="10 0 10 15"/>
+
+        </Style>
+
         <Style TargetType="Button">
             <Setter Property="Background" Value="#2c78a8" />
             <Setter Property="Height" Value="35"/>
@@ -138,11 +152,12 @@
             <Grid Grid.Row="0" Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="70"/>
                     <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="130" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Start a new Task" />
@@ -151,12 +166,18 @@
                     <TextBlock Text="Name" Style="{StaticResource TextBoxLabelStyle}"/>
                     <TextBox x:Name="TaskNameTextBox"  Style="{StaticResource TextInputStyle}" HorizontalAlignment="Left" Width="100"  Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
                 </StackPanel>
+
                 <StackPanel Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="Category" Style="{StaticResource TextBoxLabelStyle}"/>
+                    <ComboBox x:Name="CategoryComboBox"  Style="{StaticResource ComboBoxStyle}" DisplayMemberPath="Name" SelectedItem="{Binding CategoryForNewTask}" ItemsSource="{Binding Categories, Mode=OneWay}" HorizontalAlignment="Left" Width="150"  />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="2">
                     <TextBlock Text="Comment" Style="{StaticResource TextBoxLabelStyle}"/>
                     <TextBox  Text="{Binding Comment, Mode=TwoWay}"  Style="{StaticResource TextInputStyle}" TextWrapping="Wrap" AcceptsReturn="True" Height="40"  />
                 </StackPanel>
                 
-                <Button Grid.Row="2" Grid.ColumnSpan="2" mvx:Bi.nd="Command StartTaskCommand"  IsEnabled="{Binding CanStartTask}" HorizontalAlignment="Right" >Start</Button>
+                <Button Grid.Row="3" Grid.Column="2" mvx:Bi.nd="Command StartTaskCommand"  IsEnabled="{Binding CanStartTask}" HorizontalAlignment="Right" >Start</Button>
             </Grid>
 
             <StackPanel Grid.Row="0" Visibility="{Binding IsTaskStarted, Converter={StaticResource BooleanToVisibilityConverter}}" MinHeight="150">

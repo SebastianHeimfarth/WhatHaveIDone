@@ -120,6 +120,15 @@ namespace WhatHaveIDone.Core.ViewModels
             get { return _tasks; }
         }
 
+        public ObservableCollection<TaskCategory> Categories => _categories;
+
+        private TaskCategory _categoryForNewTask;
+        public TaskCategory CategoryForNewTask
+        {
+            get { return _categoryForNewTask; }
+            set { SetProperty(ref _categoryForNewTask, value); }
+        }
+
         public IReadOnlyList<TaskStatisticViewModel> TaskStatistics
         {
             get { return _taskStatistics; }
@@ -157,6 +166,7 @@ namespace WhatHaveIDone.Core.ViewModels
             {
                 _categories.Add(category);
             }
+            CategoryForNewTask = taskCategories.Single(x => x.Name == "Default");
 
             var tasksForThisWeek = await _taskDbContext.GetTasksInIntervalAsync(DayInLocalTime.Date.ToUniversalTime(), DayInLocalTime.Date.AddDays(1).ToUniversalTime());
 
@@ -181,7 +191,7 @@ namespace WhatHaveIDone.Core.ViewModels
         }
         public async Task StartTask()
         {
-            var task = await _taskDbContext.CreateTaskAsync(TaskName, Comment, DateTime.UtcNow);
+            var task = await _taskDbContext.CreateTaskAsync(TaskName, CategoryForNewTask, Comment, DateTime.UtcNow);
 
             CurrentTask = MapTaskToViewModel(task);
             Tasks.Add(CurrentTask);
@@ -198,7 +208,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private async Task<TaskViewModel> CreateContinuationTask()
         {
-            var taskModel = await _taskDbContext.CreateTaskAsync(CurrentTask.Name, CurrentTask.Comment, DateTime.UtcNow);
+            var taskModel = await _taskDbContext.CreateTaskAsync(CurrentTask.Name, CurrentTask.Category, CurrentTask.Comment, DateTime.UtcNow);
 
             return MapTaskToViewModel(taskModel);
         }
