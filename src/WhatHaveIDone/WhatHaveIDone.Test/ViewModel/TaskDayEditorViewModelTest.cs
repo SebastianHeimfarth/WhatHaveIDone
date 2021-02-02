@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿using NSubstitute;
+using NUnit.Framework;
 using Shouldly;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using WhatHaveIDone.Core;
 using WhatHaveIDone.Core.ViewModels;
 using WhatHaveIDone.Persistence;
 using WhatHaveIDone.Test.Persistence;
@@ -177,7 +179,7 @@ namespace WhatHaveIDone.Test.ViewModel
         private async Task<TaskDayEditorViewModel> CreateTaskListViewModel()
         {
             DataContext = DataContextFixture.CreateTaskDbContext();
-            var viewModel = new TaskDayEditorViewModel(DataContext);
+            var viewModel = new TaskDayEditorViewModel(DataContext, Substitute.For<IMessageBoxService>());
             await viewModel.ChangeDay(_dayInLocalTime);
 
             await viewModel.Load();

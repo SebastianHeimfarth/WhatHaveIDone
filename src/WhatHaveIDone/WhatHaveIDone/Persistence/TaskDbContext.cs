@@ -28,6 +28,19 @@ namespace WhatHaveIDone.Persistence
             return task;
         }
 
+        public async Task<bool> DeleteTaskById(Guid id)
+        {
+            var task = await GetTaskByIdAsync(id);
+            if(task!=null)
+            {
+                Tasks.Remove(task);
+                await SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
         public Task<IReadOnlyList<TaskCategory>> GetAllTaskCategories()
         {
             return TaskCategories.ToListAsync().ContinueWith(x => (IReadOnlyList<TaskCategory>)x.Result);

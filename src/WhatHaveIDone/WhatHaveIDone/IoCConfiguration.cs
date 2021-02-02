@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MvvmCross;
 using MvvmCross.IoC;
+using WhatHaveIDone.Core;
 using WhatHaveIDone.Core.Persistence;
 using WhatHaveIDone.Persistence;
 
@@ -13,6 +14,7 @@ namespace WhatHaveIDone
             MvxIoCProvider.Initialize();
 
             Mvx.IoCProvider.RegisterSingleton<ITaskDbContext>(() => CreateDataContext());
+            Mvx.IoCProvider.RegisterType<IMessageBoxService, MessageBoxService>();
         }
 
         private static ITaskDbContext CreateDataContext()

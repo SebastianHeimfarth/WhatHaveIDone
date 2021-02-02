@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows;
+using WhatHaveIDone.CustomControls;
 
 namespace WhatHaveIDone.Converter
 {
@@ -19,7 +20,7 @@ namespace WhatHaveIDone.Converter
                 else
                 {
                     var scalingPerMinute = parentWidth / (timeLineEnd - timeLineStart).TotalMinutes;
-                    left = (taskBegin - timeLineStart).TotalMinutes * scalingPerMinute;
+                    left = ((taskBegin - timeLineStart).TotalMinutes + TaskTimelineControl.ExtraSpacingOnBeginningAndEnd) * scalingPerMinute;
                 }
 
                 return new Thickness(left, 5, 0, 0);

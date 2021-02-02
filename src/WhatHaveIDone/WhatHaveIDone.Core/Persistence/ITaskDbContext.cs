@@ -15,6 +15,8 @@ namespace WhatHaveIDone.Core.Persistence
 
         Task<TaskModel> GetTaskByIdAsync(Guid id);
 
+        //todo remove from DBContext and create separate UpdateTask Method!
         Task SaveChangesAsync();
+        Task<bool> DeleteTaskById(Guid id);
     }
 }

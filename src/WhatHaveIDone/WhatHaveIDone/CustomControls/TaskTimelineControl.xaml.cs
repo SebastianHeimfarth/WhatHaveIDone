@@ -93,7 +93,8 @@ namespace WhatHaveIDone.CustomControls
 
         public ICommand TaskClicked { get; }
 
-        private double ScalingFactorForMinutes => ActualWidth / TimeLineLength.TotalMinutes;
+        public const int ExtraSpacingOnBeginningAndEnd = 60;
+        private double ScalingFactorForMinutes => ActualWidth / (TimeLineLength.TotalMinutes + 2 * ExtraSpacingOnBeginningAndEnd);
 
         private TimeSpan TimeLineLength => TimeLineEnd - TimeLineStart;
 
@@ -162,10 +163,9 @@ namespace WhatHaveIDone.CustomControls
             const double textHeight = 14d;
             const double heightForQuarters = 14d;
 
-            var timeScaleHeight = _canvas.ActualHeight * 0.2;
             var yOffset = _canvas.ActualHeight;
 
-
+            
             var horizontalLine = CreateLine(new Point(0, yOffset), new Point(ActualWidth, yOffset));
 
             var pathElements = new PathFigureCollection
@@ -175,12 +175,13 @@ namespace WhatHaveIDone.CustomControls
 
             var start = TimeLineStart == TimeLineStart.GetNextFullHour().AddHours(-1) ? TimeLineStart : TimeLineStart.GetNextFullHour();
 
+            var startOffset = ScalingFactorForMinutes * ExtraSpacingOnBeginningAndEnd;
 
             for (var currentHourUtc = start; currentHourUtc <= TimeLineEnd; currentHourUtc = currentHourUtc.AddHours(1))
             {
                 var currentHour = currentHourUtc.ToLocalTime();
 
-                var x = CalculateHorizontalOffset(currentHour);
+                var x = CalculateHorizontalOffset(currentHour) + startOffset;
 
                 var isQuarterPartOfTheDay = currentHour.Hour % 3 == 0;
 

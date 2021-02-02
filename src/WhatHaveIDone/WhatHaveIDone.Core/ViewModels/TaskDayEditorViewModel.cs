@@ -15,6 +15,7 @@ namespace WhatHaveIDone.Core.ViewModels
     {
         private readonly ObservableCollection<TaskCategory> _categories = new ObservableCollection<TaskCategory>();
         private readonly ITaskDbContext _taskDbContext;
+        private readonly IMessageBoxService _messageBoxService;
         private readonly ObservableCollection<TaskViewModel> _tasks = new ObservableCollection<TaskViewModel>();
         private string _comment;
 
@@ -30,18 +31,20 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private IReadOnlyList<TaskStatisticViewModel> _taskStatistics;
 
-        public TaskDayEditorViewModel(ITaskDbContext taskDbContext)
+        public TaskDayEditorViewModel(ITaskDbContext taskDbContext, IMessageBoxService messageBoxService)
         {
             DayInLocalTime = DateTime.Today;
             StartTaskCommand = new MvxAsyncCommand(StartTask);
             StopTaskCommand = new MvxCommand(StopTask);
             EndTaskCommand = new MvxAsyncCommand(EndTask);
             ContinueTaskCommand = new MvxAsyncCommand(ContinueTask);
+            DeleteTaskCommand = new MvxAsyncCommand(DeleteTask);
             _taskDbContext = taskDbContext;
-
+            _messageBoxService = messageBoxService;
             _tasks.CollectionChanged += OnTaskCollectionChanged;
         }
 
+        
         public bool CanStartTask => !string.IsNullOrEmpty(TaskName);
 
         public string Comment
@@ -102,6 +105,7 @@ namespace WhatHaveIDone.Core.ViewModels
         }
 
         public IMvxCommand StartTaskCommand { get; }
+        public IMvxCommand DeleteTaskCommand { get; }
 
         public IMvxCommand StopTaskCommand { get; }
 
@@ -200,11 +204,33 @@ namespace WhatHaveIDone.Core.ViewModels
             Comment = null;
         }
 
+        private async Task DeleteTask()
+        {
+            if(SelectedTask != null)
+            {
+                if(_messageBoxService.AskYesNoQuestion("Are you sure to delete the Task?", "Delete?"))
+                {
+                    var task = SelectedTask;
+
+                    if(CurrentTask == task)
+                    {
+                        CurrentTask = null;
+                    }
+
+                    Tasks.Remove(task);
+                    SelectedTask = null;
+                    await _taskDbContext.DeleteTaskById(task.Id);
+                }
+            }
+        }
+
         public void StopTask()
         {
             CurrentTask.End = DateTime.UtcNow;
             IsTaskPaused = true;
         }
+
+        
 
         private async Task<TaskViewModel> CreateContinuationTask()
         {
