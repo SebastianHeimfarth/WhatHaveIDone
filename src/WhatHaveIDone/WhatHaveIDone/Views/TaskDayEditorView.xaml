@@ -390,6 +390,7 @@
         </Style>
 
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converter:StringToShortStringConverter x:Key="StringToShortStringConverter" />
         <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
         <converter:NotNullToVisibilityConveter x:Key="NotNullToVisibilityConveter" />
         <converter:DateTimeUtcToLocalDateTimeConverter x:Key="DateTimeUtcToLocalDateTimeConverter" />
@@ -463,7 +464,7 @@
             <StackPanel Grid.Row="0" Visibility="{Binding IsTaskStarted, Converter={StaticResource BooleanToVisibilityConverter}}" MinHeight="150">
                 <DockPanel >
                     <TextBlock>
-                        <Run Text="{Binding CurrentTask.Name}" FontWeight="Bold" />
+                        <Run Text="{Binding CurrentTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
                         <Run> is running for </Run>
                         <Run  >
                             <Run.Text>
@@ -510,7 +511,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.ColumnSpan="2">
                     <Run Text="Edit Task" FontStyle="Normal"/>
-                    <Run Text="{Binding Path=SelectedTask.Name}" FontWeight="Bold" />
+                    <Run Text="{Binding Path=SelectedTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
                 </TextBlock>
 
                 <StackPanel Grid.Row="1" Grid.Column="0">
