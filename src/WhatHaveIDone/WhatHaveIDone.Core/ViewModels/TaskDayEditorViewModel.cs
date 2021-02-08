@@ -14,6 +14,7 @@ namespace WhatHaveIDone.Core.ViewModels
 {
     public class TaskDayEditorViewModel : MvxViewModel
     {
+        private const int TaskMovingAmountInMinutes = 5;
         private readonly ObservableCollection<TaskCategory> _categories = new ObservableCollection<TaskCategory>();
         private readonly ITaskDbContext _taskDbContext;
         private readonly IMessageBoxService _messageBoxService;
@@ -40,11 +41,38 @@ namespace WhatHaveIDone.Core.ViewModels
             EndTaskCommand = new MvxAsyncCommand(EndTask);
             ContinueTaskCommand = new MvxAsyncCommand(ContinueTask);
             DeleteTaskCommand = new MvxAsyncCommand(DeleteTask);
+
+            MoveTaskBeginLeftCommand = new MvxCommand(MoveTaskBeginLeft);
+            MoveTaskEndRightCommand = new MvxCommand(MoveTaskEndRight);
+            MoveTaskBeginRightCommand = new MvxCommand(MoveTaskBeginRight);
+            MoveTaskEndLeftCommand = new MvxCommand(MoveTaskEndLeft);
+
             _taskDbContext = taskDbContext;
             _messageBoxService = messageBoxService;
             _tasks.CollectionChanged += OnTaskCollectionChanged;
 
             dispatcherTimer.StartTimer(TimeSpan.FromSeconds(1), UpdateRunningTask);
+        }
+
+        private void MoveTaskEndLeft()
+        {
+            SelectedTask.End = SelectedTask.End.Value.AddMinutes(-TaskMovingAmountInMinutes);
+        }
+
+        public bool CanMoveTaskEnd => SelectedTask != null && SelectedTask.End.HasValue;
+        private void MoveTaskBeginRight()
+        {
+            SelectedTask.Begin = SelectedTask.Begin.AddMinutes(TaskMovingAmountInMinutes);
+        }
+
+        private void MoveTaskEndRight()
+        {
+            SelectedTask.End = SelectedTask.End.Value.AddMinutes(TaskMovingAmountInMinutes);
+        }
+
+        private void MoveTaskBeginLeft()
+        {
+            SelectedTask.Begin = SelectedTask.Begin.AddMinutes(-TaskMovingAmountInMinutes);
         }
 
         private void UpdateRunningTask()
@@ -111,13 +139,17 @@ namespace WhatHaveIDone.Core.ViewModels
                     UpdateTask(_selectedTask).Wait();
                 }
                 SetProperty(ref _selectedTask, value);
+                RaisePropertyChanged(() => CanMoveTaskEnd);
             }
         }
 
         public IMvxCommand StartTaskCommand { get; }
         public IMvxCommand DeleteTaskCommand { get; }
-
         public IMvxCommand StopTaskCommand { get; }
+        public IMvxCommand MoveTaskBeginLeftCommand { get; }
+        public IMvxCommand MoveTaskEndRightCommand { get; }
+        public IMvxCommand MoveTaskBeginRightCommand { get; }
+        public IMvxCommand MoveTaskEndLeftCommand { get; }
 
         public string TaskName
         {
@@ -238,6 +270,7 @@ namespace WhatHaveIDone.Core.ViewModels
         {
             CurrentTask.End = DateTime.UtcNow;
             IsTaskPaused = true;
+            RaisePropertyChanged(() => CanMoveTaskEnd);
         }
 
         
