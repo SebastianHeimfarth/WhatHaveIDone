@@ -44,6 +44,7 @@
                         </Rectangle.ToolTip>
                         <Rectangle.InputBindings>
                             <MouseBinding Gesture="LeftClick" Command="{Binding TaskClicked, ElementName=_timeLineControl}" CommandParameter="{Binding}" />
+                            
                         </Rectangle.InputBindings>
                         <Rectangle.Margin>
                             <MultiBinding Converter="{StaticResource LeftOffsetConverter}" Mode="OneWay">
@@ -60,6 +61,7 @@
                                 <Binding Path="TimeLineEnd" ElementName="_timeLineControl"/>
                                 <Binding Path="Begin"/>
                                 <Binding Path="End"/>
+                                <Binding Path="TemporaryEnd"/>
                             </MultiBinding>
                         </Rectangle.Width>
                     </Rectangle>

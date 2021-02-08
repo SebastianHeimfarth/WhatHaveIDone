@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using WhatHaveIDone.Core.CoreAbstractions;
 using WhatHaveIDone.Core.Models;
 using WhatHaveIDone.Core.Persistence;
 using static WhatHaveIDone.Core.ViewModels.ViewModelMapper;
@@ -31,7 +32,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private IReadOnlyList<TaskStatisticViewModel> _taskStatistics;
 
-        public TaskDayEditorViewModel(ITaskDbContext taskDbContext, IMessageBoxService messageBoxService)
+        public TaskDayEditorViewModel(ITaskDbContext taskDbContext, IMessageBoxService messageBoxService, IDispatcherTimer dispatcherTimer)
         {
             DayInLocalTime = DateTime.Today;
             StartTaskCommand = new MvxAsyncCommand(StartTask);
@@ -42,9 +43,18 @@ namespace WhatHaveIDone.Core.ViewModels
             _taskDbContext = taskDbContext;
             _messageBoxService = messageBoxService;
             _tasks.CollectionChanged += OnTaskCollectionChanged;
+
+            dispatcherTimer.StartTimer(TimeSpan.FromSeconds(1), UpdateRunningTask);
         }
 
-        
+        private void UpdateRunningTask()
+        {
+            if(CurrentTask!=null)
+            {
+                CurrentTask.TemporaryEnd = DateTime.UtcNow;
+            }
+        }
+
         public bool CanStartTask => !string.IsNullOrEmpty(TaskName);
 
         public string Comment

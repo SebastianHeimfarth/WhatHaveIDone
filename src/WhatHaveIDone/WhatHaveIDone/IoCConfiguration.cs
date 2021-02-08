@@ -2,7 +2,9 @@
 using MvvmCross;
 using MvvmCross.IoC;
 using WhatHaveIDone.Core;
+using WhatHaveIDone.Core.CoreAbstractions;
 using WhatHaveIDone.Core.Persistence;
+using WhatHaveIDone.CoreAbstractions;
 using WhatHaveIDone.Persistence;
 
 namespace WhatHaveIDone
@@ -15,6 +17,7 @@ namespace WhatHaveIDone
 
             Mvx.IoCProvider.RegisterSingleton<ITaskDbContext>(() => CreateDataContext());
             Mvx.IoCProvider.RegisterType<IMessageBoxService, MessageBoxService>();
+            Mvx.IoCProvider.RegisterType<IDispatcherTimer, DispatcherTimerWrapper>();
         }
 
         private static ITaskDbContext CreateDataContext()

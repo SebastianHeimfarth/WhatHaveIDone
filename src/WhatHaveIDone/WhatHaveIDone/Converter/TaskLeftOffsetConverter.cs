@@ -19,8 +19,8 @@ namespace WhatHaveIDone.Converter
                 }
                 else
                 {
-                    var scalingPerMinute = parentWidth / (timeLineEnd - timeLineStart).TotalMinutes;
-                    left = ((taskBegin - timeLineStart).TotalMinutes + TaskTimelineControl.ExtraSpacingOnBeginningAndEnd) * scalingPerMinute;
+                    var scalingPerMinute = parentWidth / ((timeLineEnd - timeLineStart).TotalMinutes + 2 * TaskTimelineControl.ExtraSpacingOnBeginningAndEnd);
+                    left = ((taskBegin - timeLineStart).TotalMinutes + TaskTimelineControl.ExtraSpacingOnBeginningAndEnd) * scalingPerMinute ;
                 }
 
                 return new Thickness(left, 5, 0, 0);

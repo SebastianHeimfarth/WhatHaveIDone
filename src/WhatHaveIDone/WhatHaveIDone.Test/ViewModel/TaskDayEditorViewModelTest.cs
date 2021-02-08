@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WhatHaveIDone.Core;
+using WhatHaveIDone.Core.CoreAbstractions;
 using WhatHaveIDone.Core.ViewModels;
 using WhatHaveIDone.Persistence;
 using WhatHaveIDone.Test.Persistence;
@@ -179,7 +180,7 @@ namespace WhatHaveIDone.Test.ViewModel
         private async Task<TaskDayEditorViewModel> CreateTaskListViewModel()
         {
             DataContext = DataContextFixture.CreateTaskDbContext();
-            var viewModel = new TaskDayEditorViewModel(DataContext, Substitute.For<IMessageBoxService>());
+            var viewModel = new TaskDayEditorViewModel(DataContext, Substitute.For<IMessageBoxService>(), Substitute.For<IDispatcherTimer>());
             await viewModel.ChangeDay(_dayInLocalTime);
 
             await viewModel.Load();

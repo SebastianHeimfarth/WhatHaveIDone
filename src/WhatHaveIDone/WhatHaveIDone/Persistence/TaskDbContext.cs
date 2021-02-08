@@ -67,6 +67,9 @@ namespace WhatHaveIDone.Persistence
             modelBuilder.Entity<TaskModel>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.Property(x => x.Begin).HasConversion(new DateTimeToUtcDateTimeConverter());
+                entity.Property(x => x.End).HasConversion(new DateTimeToUtcDateTimeConverter());
+
             });
 
             var colorToIntegerConverter = new ColorToIntegerConverter();

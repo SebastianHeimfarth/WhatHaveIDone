@@ -10,8 +10,10 @@ namespace WhatHaveIDone.Core.ViewModels
         private TaskCategory _category;
         private string _comment;
         private DateTime _begin;
+        private DateTime _temporaryEnd = DateTime.UtcNow;
         private DateTime? _end;
         private Guid _id;
+
 
         public Guid Id
         {
@@ -55,6 +57,15 @@ namespace WhatHaveIDone.Core.ViewModels
             set
             {
                 SetProperty(ref _begin, value);
+            }
+        }
+
+        public DateTime TemporaryEnd
+        {
+            get => _temporaryEnd;
+            set
+            {
+                SetProperty(ref _temporaryEnd, value);
             }
         }
 

@@ -9,7 +9,7 @@ namespace WhatHaveIDone.Converter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values != null && values.Length == 5 && values[0] is double parentWidth && values[1] is DateTime timeLineStart && values[2] is DateTime timeLineEnd && values[3] is DateTime taskBegin)
+            if (values != null && values.Length == 6 && values[0] is double parentWidth && values[1] is DateTime timeLineStart && values[2] is DateTime timeLineEnd && values[3] is DateTime taskBegin && values[5] is DateTime taskTemporaryEnd)
             {
                 DateTime? taskEnd = (DateTime?)values[4];
 
@@ -19,18 +19,21 @@ namespace WhatHaveIDone.Converter
                 }
                 else
                 {
-                    var scalingPerMinute = parentWidth / (timeLineEnd - timeLineStart).TotalMinutes;
+                    var scalingPerMinute = parentWidth / ((timeLineEnd - timeLineStart).TotalMinutes + 2 * TaskTimelineControl.ExtraSpacingOnBeginningAndEnd);
 
                     if (!taskEnd.HasValue)
                     {
-                        return 50d * scalingPerMinute;
+                        var defaultWidth = 15d * scalingPerMinute;
+                        var temporaryWidth = (taskTemporaryEnd - taskBegin).TotalMinutes * scalingPerMinute;
+
+                        return Math.Max(temporaryWidth, defaultWidth);
                     }
 
                     return (taskEnd.Value - taskBegin).TotalMinutes * scalingPerMinute;
                 }
             }
 
-            throw new ArgumentException("expected 5 Arguments 'parentWidth'  'timeLineStart' 'timeLineEnd' 'taskStart' 'taskEnd'");
+            throw new ArgumentException("expected 6 Arguments 'parentWidth'  'timeLineStart' 'timeLineEnd' 'taskStart' 'taskEnd' 'taskTemporaryEnd'");
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

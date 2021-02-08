@@ -394,6 +394,7 @@
         <converter:NotNullToVisibilityConveter x:Key="NotNullToVisibilityConveter" />
         <converter:DateTimeUtcToLocalDateTimeConverter x:Key="DateTimeUtcToLocalDateTimeConverter" />
         <converter:DebugConverter x:Key="DebugConverter" />
+        <converter:RunningTimeToStringConverter x:Key="RunningTimeToStringConverter" />
     </views:MvxWpfView.Resources>
 
     <DockPanel MouseLeftButtonDown="DockPanel_MouseLeftButtonDown">
@@ -463,8 +464,15 @@
                 <DockPanel >
                     <TextBlock>
                         <Run Text="{Binding CurrentTask.Name}" FontWeight="Bold" />
-                        <Run> is running since </Run>
-                        <Run Text="{Binding CurrentTask.Begin, StringFormat=HH:mm, Converter={StaticResource DateTimeUtcToLocalDateTimeConverter}}" />
+                        <Run> is running for </Run>
+                        <Run  >
+                            <Run.Text>
+                                <MultiBinding Converter="{StaticResource RunningTimeToStringConverter}">
+                                    <Binding Path="CurrentTask.Begin" Mode="OneWay"/>
+                                    <Binding Path="CurrentTask.TemporaryEnd" Mode="OneWay"/>
+                                </MultiBinding>
+                            </Run.Text>
+                        </Run>
                     </TextBlock>
 
                     <TextBlock Text="*Paused*" Foreground="DarkOrange" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" />
