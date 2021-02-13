@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converter="clr-namespace:WhatHaveIDone.Converter">
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converter:StringToShortStringConverter x:Key="StringToShortStringConverter" />
+    <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+    <converter:NotNullToVisibilityConveter x:Key="NotNullToVisibilityConveter" />
+    <converter:DateTimeUtcToLocalDateTimeConverter x:Key="DateTimeUtcToLocalDateTimeConverter" />
+    <converter:DebugConverter x:Key="DebugConverter" />
+    <converter:RunningTimeToStringConverter x:Key="RunningTimeToStringConverter" />
+    <converter:DrawingColorToBrushConverter x:Key="DrawingColorToBrushConverter" />
+</ResourceDictionary>

@@ -1,0 +1,248 @@
+﻿<views:MvxWpfView
+    x:Class="WhatHaveIDone.Views.TaskDayEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+    xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+    xmlns:converter="clr-namespace:WhatHaveIDone.Converter" 
+    xmlns:customcontrols="clr-namespace:WhatHaveIDone.CustomControls"
+    mc:Ignorable="d"
+    x:Name="_taskDayEditor"
+    d:DesignHeight="450" d:DesignWidth="800">
+    <views:MvxWpfView.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/WhatHaveIDone;component/ResourceDictionaries/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WhatHaveIDone;component/ResourceDictionaries/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WhatHaveIDone;component/ResourceDictionaries/ScrollViewerStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </views:MvxWpfView.Resources>
+
+    <DockPanel MouseLeftButtonDown="DockPanel_MouseLeftButtonDown">
+        <Grid DockPanel.Dock="Top">
+            <DockPanel Height="40" 
+                VerticalAlignment="Top">
+
+                <TextBlock DockPanel.Dock="Left" Style="{StaticResource TitleTextStyle}">What have I done?</TextBlock>
+
+                <Button x:Name="MinimizeButton"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource CloseButtonStyle}"
+                    KeyboardNavigation.IsTabStop="False"
+                    Margin="0 -10 0 0"
+                    Click="MinimizeButton_Click">
+                    <Grid Margin="13 8 13 8" Name="parent">
+                        <Line  X1="0" Y1="0" X2="{Binding ElementName='parent', Path='ActualWidth'}" Y2="{Binding ElementName='parent', Path='ActualHeight'}" Stroke="Black" StrokeThickness="2" />
+                        <Line  X1="0" Y1="{Binding ElementName='parent', Path='ActualHeight'}" X2="{Binding ElementName='parent', Path='ActualWidth'}" Y2="0" Stroke="Black" StrokeThickness="2" />
+                    </Grid>
+                </Button>
+            </DockPanel>
+        </Grid>
+
+        <Grid DockPanel.Dock="Bottom"> 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="12*"></RowDefinition>
+                <RowDefinition Height="10*"></RowDefinition>
+                <RowDefinition Height="12*"></RowDefinition>
+                <RowDefinition Height="45*"></RowDefinition>
+                <RowDefinition Height="120"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Width="60" Height="30" Content="&#9669;" HorizontalAlignment="Right" ToolTip="Previous Day" mvx:Bi.nd="Command NavigateToPreviousDayCommand"/>
+                <TextBlock Grid.Column="1" Text="{Binding DayInLocalTime, StringFormat=dd.MM.yyyy}" HorizontalAlignment="Center" Margin="0 15"/>
+                <Button Grid.Column="2" Width="60" Height="30" Content="&#9659;" HorizontalAlignment="Left" ToolTip="Next Day" mvx:Bi.nd="Command NavigateToNextDayCommand"/>
+            </Grid>
+
+            <Grid Grid.Row="1" Grid.Column="0">
+                <ItemsControl ItemsSource="{Binding TaskStatistics}" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Width="200" Height="22">
+                                <StackPanel.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="FontSize" Value="16"/>
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="10 0 0 0"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <Rectangle Width="20" Height="20" Fill="{Binding Category.Color, Converter={StaticResource DrawingColorToBrushConverter}}"/>
+                                <TextBlock Text="{Binding Category.Name}" />
+
+                                <TextBlock Text="{Binding TimeSpan, StringFormat=hh\\:mm}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+
+
+            <StackPanel Grid.Row="2" Grid.Column="1" Visibility="{Binding IsTaskStarted, Converter={StaticResource BooleanToVisibilityConverter}}" MinHeight="150">
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <TextBlock TextWrapping="Wrap" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                            <Run Text="{Binding CurrentTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
+                            <Run > is running for </Run>
+                            <Run  >
+                                <Run.Text>
+                                    <MultiBinding Converter="{StaticResource RunningTimeToStringConverter}">
+                                        <Binding Path="CurrentTask.Begin" Mode="OneWay"/>
+                                        <Binding Path="CurrentTask.TemporaryEnd" Mode="OneWay"/>
+                                    </MultiBinding>
+                                </Run.Text>
+                            </Run>
+                    </TextBlock>
+
+                    <TextBlock TextWrapping="Wrap" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Run Text="{Binding CurrentTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
+                            <Run Text="* paused *" Foreground ="DarkOrange" />
+                    </TextBlock>
+                    
+                    <Button mvx:Bi.nd="Command StopTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}" ToolTip="Stop running Task" >Stop</Button>
+
+                    <Button mvx:Bi.nd="Command ContinueTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Continue last Task">Continue</Button>
+                    <Button mvx:Bi.nd="Command EndTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="End paused Task">End</Button>
+                </StackPanel>
+                
+
+            </StackPanel>
+
+
+
+
+
+
+
+            <Grid Grid.Row="3" Grid.Column="1" Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}" Background="{StaticResource HighlightedBackgroundColor}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Start a new Task" />
+
+                <StackPanel Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="Name" Style="{StaticResource TextBoxLabelStyle}"/>
+                    <TextBox x:Name="TaskNameTextBox"  Style="{StaticResource TextInputStyle}" HorizontalAlignment="Stretch"  Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="Category" Style="{StaticResource TextBoxLabelStyle}"/>
+                    <ComboBox x:Name="CategoryComboBox"  Style="{StaticResource ComboBoxStyle}" DisplayMemberPath="Name" SelectedItem="{Binding CategoryForNewTask}" ItemsSource="{Binding Categories, Mode=OneWay}" HorizontalAlignment="Left" Width="150"  />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="2">
+                    <TextBlock Text="Comment" Style="{StaticResource TextBoxLabelStyle}"/>
+                    <TextBox  Text="{Binding Comment, Mode=TwoWay}"  Style="{StaticResource TextInputStyle}" TextWrapping="Wrap" AcceptsReturn="True" Height="40"  />
+                </StackPanel>
+                
+                <Button Grid.Row="3" Grid.Column="2" mvx:Bi.nd="Command StartTaskCommand"  IsEnabled="{Binding CanStartTask}" HorizontalAlignment="Right" ToolTip="Start a new Task">Start</Button>
+            </Grid>
+
+            
+            <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="{StaticResource HighlightedBackgroundColor}" Visibility="{Binding SelectedTask, Converter={StaticResource NotNullToVisibilityConveter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2">
+                    <Run Text="Edit Task" FontStyle="Normal"/>
+                    <Run Text="{Binding Path=SelectedTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
+                </TextBlock>
+
+                <StackPanel Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="Name" Style="{StaticResource TextBoxLabelStyle}"/>
+                    <TextBox x:Name="TaskNameEditTextBox"  Style="{StaticResource TextInputStyle}" HorizontalAlignment="Stretch"  Text="{Binding Path=SelectedTask.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="Category" Style="{StaticResource TextBoxLabelStyle}"/>
+                    <ComboBox x:Name="CategoryEditComboBox"  Style="{StaticResource ComboBoxStyle}" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedTask.Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Categories, Mode=OneWay}" HorizontalAlignment="Left" Width="100"  />
+                </StackPanel>
+
+                <Grid Grid.Row="0" Grid.RowSpan="3" Grid.Column="2" HorizontalAlignment="Left"  Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition Height="55"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="&#9669;" Grid.Row="0" Grid.Column="0" mvx:Bi.nd="Command MoveTaskBeginLeftCommand"  Width="40" ToolTip="Move Task Start"/>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="0 5 0 0">
+                        <TextBlock Text="Start" Style="{StaticResource TextBoxLabelStyle}" HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding SelectedTask.Begin, StringFormat=HH:mm, Converter={StaticResource DateTimeUtcToLocalDateTimeConverter}}" HorizontalAlignment="Center" Margin="0 0 0 0"/>
+                    </StackPanel>
+                    <Button Content="&#9659;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command MoveTaskBeginRightCommand"  Width="40" ToolTip="Move Task Start"/>
+
+                    <Button Content="&#9669;" Grid.Row="1" Grid.Column="0" mvx:Bi.nd="Command MoveTaskEndLeftCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="0 5 0 0" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock Text="End" Style="{StaticResource TextBoxLabelStyle}" HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding SelectedTask.End, StringFormat=HH:mm, Converter={StaticResource DateTimeUtcToLocalDateTimeConverter}}" HorizontalAlignment="Center" Margin="0 0 0 0"/>
+                    </StackPanel>
+                    <Button Content="&#9659;" Grid.Row="1" Grid.Column="2" mvx:Bi.nd="Command MoveTaskEndRightCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
+                </Grid>
+
+                <Button Content="&#128465;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command DeleteTaskCommand" HorizontalAlignment="Right" Width="40" ToolTip="Delete Task"/>
+
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
+                    <TextBlock Text="Comment" Style="{StaticResource TextBoxLabelStyle}"/>
+                    <TextBox Text="{Binding SelectedTask.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextInputStyle}" TextWrapping="Wrap" AcceptsReturn="True" Height="40"  />
+                </StackPanel>
+                
+
+            </Grid>
+
+
+            <ScrollViewer Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" CanContentScroll="True">
+                <customcontrols:TaskTimelineControl x:Name="_taskTimelineControl"
+                    Tasks="{Binding DataContext.Tasks, ElementName=_taskDayEditor}" 
+                    TimeLineStart="{Binding DataContext.DayUtc, ElementName=_taskDayEditor}" 
+                    TimeLineEnd="{Binding DataContext.EndUtc, ElementName=_taskDayEditor}" 
+                    SelectedTask="{Binding DataContext.SelectedTask, Mode=TwoWay, ElementName=_taskDayEditor}"
+                    Margin="10"
+                    Width="1400"
+                    Background="{StaticResource SecondaryBackgroundColor}"
+                />
+            </ScrollViewer>
+            
+           
+
+        </Grid>
+
+
+
+    </DockPanel>
+
+</views:MvxWpfView>
