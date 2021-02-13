@@ -61,9 +61,9 @@
                     <ColumnDefinition Width="150"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Width="60" Height="30" Content="&#9669;" HorizontalAlignment="Right" ToolTip="Previous Day"/>
+                <Button Grid.Column="0" Width="60" Height="30" Content="&#9669;" HorizontalAlignment="Right" ToolTip="Previous Day" mvx:Bi.nd="Command NavigateToPreviousDayCommand"/>
                 <TextBlock Grid.Column="1" Text="{Binding DayInLocalTime, StringFormat=dd.MM.yyyy}" HorizontalAlignment="Center" Margin="0 15"/>
-                <Button Grid.Column="2" Width="60" Height="30" Content="&#9659;" HorizontalAlignment="Left" ToolTip="Next Day"/>
+                <Button Grid.Column="2" Width="60" Height="30" Content="&#9659;" HorizontalAlignment="Left" ToolTip="Next Day" mvx:Bi.nd="Command NavigateToNextDayCommand"/>
             </Grid>
 
             <Grid Grid.Row="1" Grid.Column="0">

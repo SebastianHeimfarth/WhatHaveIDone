@@ -1,4 +1,5 @@
 ﻿using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,12 @@ using static WhatHaveIDone.Core.ViewModels.ViewModelMapper;
 
 namespace WhatHaveIDone.Core.ViewModels
 {
-    public class TaskDayEditorViewModel : MvxViewModel
+    public class TaskDayEditorViewModel : MvxViewModel<DateTime>
     {
         private const int TaskMovingAmountInMinutes = 5;
         private readonly ObservableCollection<TaskCategory> _categories = new ObservableCollection<TaskCategory>();
         private readonly ITaskDbContext _taskDbContext;
+        private readonly IMvxNavigationService _navigationService;
         private readonly IMessageBoxService _messageBoxService;
         private readonly ObservableCollection<TaskViewModel> _tasks = new ObservableCollection<TaskViewModel>();
         private string _comment;
@@ -33,9 +35,8 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private IReadOnlyList<TaskStatisticViewModel> _taskStatistics;
 
-        public TaskDayEditorViewModel(ITaskDbContext taskDbContext, IMessageBoxService messageBoxService, IDispatcherTimer dispatcherTimer)
+        public TaskDayEditorViewModel(ITaskDbContext taskDbContext, IMvxNavigationService navigationService, IMessageBoxService messageBoxService, IDispatcherTimer dispatcherTimer)
         {
-            DayInLocalTime = DateTime.Today;
             StartTaskCommand = new MvxAsyncCommand(StartTask);
             StopTaskCommand = new MvxCommand(StopTask);
             EndTaskCommand = new MvxAsyncCommand(EndTask);
@@ -47,11 +48,20 @@ namespace WhatHaveIDone.Core.ViewModels
             MoveTaskBeginRightCommand = new MvxCommand(MoveTaskBeginRight);
             MoveTaskEndLeftCommand = new MvxCommand(MoveTaskEndLeft);
 
+            NavigateToNextDayCommand = new MvxAsyncCommand(NavigateToNextDay);
+            NavigateToPreviousDayCommand = new MvxAsyncCommand(NavigateToPreviousDay);
+
             _taskDbContext = taskDbContext;
+            _navigationService = navigationService;
             _messageBoxService = messageBoxService;
             _tasks.CollectionChanged += OnTaskCollectionChanged;
 
             dispatcherTimer.StartTimer(TimeSpan.FromSeconds(1), UpdateRunningTask);
+        }
+
+        public override void Prepare(DateTime dateTime)
+        {
+            DayInLocalTime = dateTime;
         }
 
         private void MoveTaskEndLeft()
@@ -150,6 +160,23 @@ namespace WhatHaveIDone.Core.ViewModels
         public IMvxCommand MoveTaskEndRightCommand { get; }
         public IMvxCommand MoveTaskBeginRightCommand { get; }
         public IMvxCommand MoveTaskEndLeftCommand { get; }
+        public IMvxCommand NavigateToNextDayCommand { get; }
+        public IMvxCommand NavigateToPreviousDayCommand { get; }
+
+        public Task NavigateToNextDay()
+        {
+            if(DayInLocalTime < DateTime.Today)
+            {
+                return _navigationService.Navigate<TaskDayEditorViewModel, DateTime>(DayInLocalTime.AddDays(1));
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task NavigateToPreviousDay()
+        {
+            return _navigationService.Navigate<TaskDayEditorViewModel, DateTime>(DayInLocalTime.AddDays(-1));
+        }
 
         public string TaskName
         {

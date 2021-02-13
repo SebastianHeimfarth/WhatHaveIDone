@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using MvvmCross.Navigation;
+using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
 using System;
@@ -180,7 +181,7 @@ namespace WhatHaveIDone.Test.ViewModel
         private async Task<TaskDayEditorViewModel> CreateTaskListViewModel()
         {
             DataContext = DataContextFixture.CreateTaskDbContext();
-            var viewModel = new TaskDayEditorViewModel(DataContext, Substitute.For<IMessageBoxService>(), Substitute.For<IDispatcherTimer>());
+            var viewModel = new TaskDayEditorViewModel(DataContext, Substitute.For<IMvxNavigationService>(), Substitute.For<IMessageBoxService>(), Substitute.For<IDispatcherTimer>());
             await viewModel.ChangeDay(_dayInLocalTime);
 
             await viewModel.Load();

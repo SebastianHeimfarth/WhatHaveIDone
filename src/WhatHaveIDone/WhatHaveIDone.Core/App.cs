@@ -1,5 +1,4 @@
 ﻿using MvvmCross.ViewModels;
-using WhatHaveIDone.Core.ViewModels;
 
 namespace WhatHaveIDone.Core
 {
@@ -7,7 +6,7 @@ namespace WhatHaveIDone.Core
     {
         public override void Initialize()
         {
-            RegisterAppStart<TaskDayEditorViewModel>();
+            RegisterCustomAppStart<AppStart>();
         }
     }
 }
