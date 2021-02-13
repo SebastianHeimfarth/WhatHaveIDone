@@ -12,17 +12,16 @@ namespace WhatHaveIDone.Converter
             {
                 var taskEnd = (DateTime?)values[2];
 
-                if(taskEnd.HasValue)
+                if (taskEnd.HasValue)
                 {
                     return $"{taskName} [{taskStart.ToLocalTime():HH:mm}-{taskEnd.Value.ToLocalTime():HH:mm}]";
                 }
 
                 return $"{taskName} [{taskStart.ToLocalTime():HH:mm} ...";
-            } 
+            }
 
             return string.Empty;
         }
-
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {

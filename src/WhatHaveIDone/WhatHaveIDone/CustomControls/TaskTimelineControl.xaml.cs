@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WhatHaveIDone.Core.ViewModels;
 using WhatHaveIDone.Core.Util;
+using WhatHaveIDone.Core.ViewModels;
 
 namespace WhatHaveIDone.CustomControls
 {
@@ -22,24 +17,27 @@ namespace WhatHaveIDone.CustomControls
     public partial class TaskTimelineControl : UserControl
     {
         #region SelectedTask-Property
+
         public static readonly DependencyProperty SelectedTaskProperty =
             DependencyProperty.Register(nameof(SelectedTask), typeof(TaskViewModel), typeof(TaskTimelineControl), new PropertyMetadata(null, new PropertyChangedCallback(OnSelectedTaskChanged)));
 
         private static void OnSelectedTaskChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            
         }
 
         public TaskViewModel SelectedTask
         {
             get { return (TaskViewModel)GetValue(SelectedTaskProperty); }
-            set {
-                SetValue(SelectedTaskProperty, value); 
+            set
+            {
+                SetValue(SelectedTaskProperty, value);
             }
         }
-        #endregion
+
+        #endregion SelectedTask-Property
 
         #region Tasks-Property
+
         public static readonly DependencyProperty TasksProperty =
             DependencyProperty.Register(nameof(Tasks), typeof(ObservableCollection<TaskViewModel>), typeof(TaskTimelineControl));
 
@@ -48,9 +46,11 @@ namespace WhatHaveIDone.CustomControls
             get { return (ObservableCollection<TaskViewModel>)GetValue(TasksProperty); }
             set { SetValue(TasksProperty, value); }
         }
-        #endregion
+
+        #endregion Tasks-Property
 
         #region TimeLineEnd-Property
+
         public static readonly DependencyProperty TimeLineEndProperty =
             DependencyProperty.Register(nameof(TimeLineEnd), typeof(DateTime), typeof(TaskTimelineControl), new PropertyMetadata(default(DateTime), OnTimeLineEndChanged));
 
@@ -59,14 +59,17 @@ namespace WhatHaveIDone.CustomControls
             get { return (DateTime)GetValue(TimeLineEndProperty); }
             set { SetValue(TimeLineEndProperty, value); }
         }
+
         private static void OnTimeLineEndChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var control = (TaskTimelineControl)dependencyObject;
             control.HandleOnTimeLineEndChanged();
         }
-        #endregion
+
+        #endregion TimeLineEnd-Property
 
         #region TimeLineStart-Property
+
         public static readonly DependencyProperty TimeLineStartProperty =
             DependencyProperty.Register(nameof(TimeLineStart), typeof(DateTime), typeof(TaskTimelineControl), new PropertyMetadata(default(DateTime), OnTimeLineStartChanged));
 
@@ -75,13 +78,14 @@ namespace WhatHaveIDone.CustomControls
             get { return (DateTime)GetValue(TimeLineStartProperty); }
             set { SetValue(TimeLineStartProperty, value); }
         }
+
         private static void OnTimeLineStartChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var control = (TaskTimelineControl)dependencyObject;
             control.HandleOnTimeLineStartChanged();
         }
 
-        #endregion
+        #endregion TimeLineStart-Property
 
         public TaskTimelineControl()
         {
@@ -113,16 +117,11 @@ namespace WhatHaveIDone.CustomControls
             };
         }
 
-       
-
         private double CalculateHorizontalOffset(DateTime dateTime)
         {
             return (dateTime - TimeLineStart.ToLocalTime()).TotalMinutes * ScalingFactorForMinutes;
         }
 
-    
-
-        
         private void HandleOnTimeLineEndChanged()
         {
             UpdateRenderedElements();
@@ -132,8 +131,6 @@ namespace WhatHaveIDone.CustomControls
         {
             UpdateRenderedElements();
         }
-
-       
 
         private void TaskTimelineControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -150,7 +147,7 @@ namespace WhatHaveIDone.CustomControls
 
         private void UpdateTimeAxis()
         {
-            if(_timeLine != null)
+            if (_timeLine != null)
             {
                 _canvas.Children.Remove(_timeLine);
                 foreach (var label in _timeLineLabels)
@@ -165,7 +162,6 @@ namespace WhatHaveIDone.CustomControls
 
             var yOffset = _canvas.ActualHeight;
 
-            
             var horizontalLine = CreateLine(new Point(0, yOffset), new Point(ActualWidth, yOffset));
 
             var pathElements = new PathFigureCollection
@@ -187,7 +183,7 @@ namespace WhatHaveIDone.CustomControls
 
                 pathElements.Add(CreateLine(new Point(x, yOffset), new Point(x, yOffset - (isQuarterPartOfTheDay ? heightForQuarters : regularHeight))));
 
-                if(isQuarterPartOfTheDay)
+                if (isQuarterPartOfTheDay)
                 {
                     TextBlock label = AddLabelForTimeline(currentHour);
                     Canvas.SetLeft(label, x - 5);
@@ -203,13 +199,10 @@ namespace WhatHaveIDone.CustomControls
                 {
                     Figures = pathElements
                 },
-
             };
-
 
             _timeLine = timeLine;
             _canvas.Children.Add(timeLine);
-
         }
 
         private TextBlock AddLabelForTimeline(DateTime currentHour)
@@ -222,7 +215,7 @@ namespace WhatHaveIDone.CustomControls
             return label;
         }
 
-        class TaskClickedCommand : ICommand
+        private class TaskClickedCommand : ICommand
         {
             private readonly TaskTimelineControl _parent;
 
@@ -242,7 +235,7 @@ namespace WhatHaveIDone.CustomControls
             {
                 TaskViewModel task = (TaskViewModel)parameter;
 
-                if(_parent.SelectedTask == task)
+                if (_parent.SelectedTask == task)
                 {
                     _parent.SelectedTask = null;
                 }
@@ -253,5 +246,4 @@ namespace WhatHaveIDone.CustomControls
             }
         }
     }
-
 }

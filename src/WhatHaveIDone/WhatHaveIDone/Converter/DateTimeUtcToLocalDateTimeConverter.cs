@@ -8,13 +8,13 @@ namespace WhatHaveIDone.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is DateTime dateTime)
+            if (value is DateTime dateTime)
             {
                 return dateTime.ToLocalTime();
             }
             var nullableDateTime = value as DateTime?;
 
-            if(nullableDateTime != null)
+            if (nullableDateTime != null)
             {
                 return nullableDateTime.GetValueOrDefault().ToLocalTime();
             }

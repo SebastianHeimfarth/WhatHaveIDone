@@ -18,8 +18,6 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
-
-
         public TimeSpan TimeSpan
         {
             get => _timeSpan;

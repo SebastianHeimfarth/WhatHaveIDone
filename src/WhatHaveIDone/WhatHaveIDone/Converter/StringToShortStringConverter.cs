@@ -8,12 +8,12 @@ namespace WhatHaveIDone.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is string stringValue)
+            if (value is string stringValue)
             {
-                if(parameter is string lengthString)
+                if (parameter is string lengthString)
                 {
                     var length = System.Convert.ToInt32(lengthString);
-                    if(stringValue.Length>=length)
+                    if (stringValue.Length >= length)
                     {
                         return $"{stringValue.Substring(0, length)}...";
                     }

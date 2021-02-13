@@ -14,7 +14,6 @@ namespace WhatHaveIDone.Core.ViewModels
         private DateTime? _end;
         private Guid _id;
 
-
         public Guid Id
         {
             get => _id;
@@ -77,6 +76,5 @@ namespace WhatHaveIDone.Core.ViewModels
                 SetProperty(ref _end, value);
             }
         }
-
     }
 }

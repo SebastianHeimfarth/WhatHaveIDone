@@ -82,7 +82,7 @@ namespace WhatHaveIDone.UITest.TestCases
             };
         }
 
-        class TestCase : ITestCase
+        private class TestCase : ITestCase
         {
             public ObservableCollection<TaskViewModel> Tasks { get; set; }
 
@@ -100,7 +100,5 @@ namespace WhatHaveIDone.UITest.TestCases
                 };
             }
         }
-
-        
     }
 }

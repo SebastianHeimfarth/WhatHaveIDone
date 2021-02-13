@@ -3,7 +3,6 @@ using NUnit.Framework;
 using Shouldly;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using WhatHaveIDone.Core.CoreAbstractions;
 using WhatHaveIDone.Core.Models;
@@ -16,8 +15,6 @@ namespace WhatHaveIDone.Test.ViewModel
     {
         private readonly DateTime _from = new DateTime(2021, 1, 8, 23, 0, 0, DateTimeKind.Utc);
         private readonly DateTime _to = new DateTime(2021, 1, 9, 23, 0, 0, DateTimeKind.Utc);
-
-
 
         [Test]
         public async Task Initialize_EmptyTask_ShouldNotIndicateRunningTask()
@@ -37,7 +34,7 @@ namespace WhatHaveIDone.Test.ViewModel
         public async Task Initialize_ClosedTask_ShouldNotIndicateRunningTask()
         {
             //arrange
-            NotificationViewModel sut = CreateNotificationViewModel(new List<TaskModel>() { new TaskModel { Begin = _from, End = _to, Name = "FinishedTask" } } );
+            NotificationViewModel sut = CreateNotificationViewModel(new List<TaskModel>() { new TaskModel { Begin = _from, End = _to, Name = "FinishedTask" } });
 
             //act
             await sut.Initialize();
@@ -78,7 +75,6 @@ namespace WhatHaveIDone.Test.ViewModel
             sut.CurrentTask.ShouldBeNull();
             sut.IsTaskRunning.ShouldBeFalse();
         }
-
 
         private NotificationViewModel CreateNotificationViewModel(IReadOnlyList<TaskModel> taskModels)
         {

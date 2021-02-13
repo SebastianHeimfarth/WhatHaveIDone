@@ -13,7 +13,7 @@ namespace WhatHaveIDone.Converter
             {
                 DateTime? taskEnd = (DateTime?)values[4];
 
-                if (timeLineEnd == timeLineStart || taskBegin == taskEnd.GetValueOrDefault()) 
+                if (timeLineEnd == timeLineStart || taskBegin == taskEnd.GetValueOrDefault())
                 {
                     return 0d;
                 }
@@ -31,7 +31,7 @@ namespace WhatHaveIDone.Converter
 
                     var minWidth = 5d * scalingPerMinute;
 
-                    return  Math.Max(minWidth, (taskEnd.Value - taskBegin).TotalMinutes * scalingPerMinute);
+                    return Math.Max(minWidth, (taskEnd.Value - taskBegin).TotalMinutes * scalingPerMinute);
                 }
             }
 

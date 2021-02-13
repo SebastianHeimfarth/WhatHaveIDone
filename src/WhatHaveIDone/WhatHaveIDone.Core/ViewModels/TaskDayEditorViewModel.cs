@@ -70,6 +70,7 @@ namespace WhatHaveIDone.Core.ViewModels
         }
 
         public bool CanMoveTaskEnd => SelectedTask != null && SelectedTask.End.HasValue;
+
         private void MoveTaskBeginRight()
         {
             SelectedTask.Begin = SelectedTask.Begin.AddMinutes(TaskMovingAmountInMinutes);
@@ -87,7 +88,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private void UpdateRunningTask()
         {
-            if(CurrentTask!=null)
+            if (CurrentTask != null)
             {
                 CurrentTask.TemporaryEnd = DateTime.UtcNow;
             }
@@ -165,7 +166,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
         public Task NavigateToNextDay()
         {
-            if(DayInLocalTime < DateTime.Today)
+            if (DayInLocalTime < DateTime.Today)
             {
                 return _navigationService.Navigate<TaskDayEditorViewModel, DateTime>(DayInLocalTime.AddDays(1));
             }
@@ -196,6 +197,7 @@ namespace WhatHaveIDone.Core.ViewModels
         public ObservableCollection<TaskCategory> Categories => _categories;
 
         private TaskCategory _categoryForNewTask;
+
         public TaskCategory CategoryForNewTask
         {
             get { return _categoryForNewTask; }
@@ -257,11 +259,12 @@ namespace WhatHaveIDone.Core.ViewModels
 
         public async Task OnBeforeClosing()
         {
-            if(SelectedTask != null)
+            if (SelectedTask != null)
             {
                 await UpdateTask(SelectedTask);
             }
         }
+
         public async Task StartTask()
         {
             var task = await _taskDbContext.CreateTaskAsync(TaskName, CategoryForNewTask, Comment, DateTime.UtcNow);
@@ -275,13 +278,13 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private async Task DeleteTask()
         {
-            if(SelectedTask != null)
+            if (SelectedTask != null)
             {
-                if(_messageBoxService.AskYesNoQuestion("Are you sure to delete the Task?", "Delete?"))
+                if (_messageBoxService.AskYesNoQuestion("Are you sure to delete the Task?", "Delete?"))
                 {
                     var task = SelectedTask;
 
-                    if(CurrentTask == task)
+                    if (CurrentTask == task)
                     {
                         CurrentTask = null;
                     }
@@ -301,8 +304,6 @@ namespace WhatHaveIDone.Core.ViewModels
             UpdateTaskStatistics();
         }
 
-        
-
         private async Task<TaskViewModel> CreateContinuationTask()
         {
             var taskModel = await _taskDbContext.CreateTaskAsync(CurrentTask.Name, CurrentTask.Category, CurrentTask.Comment, DateTime.UtcNow);
@@ -315,7 +316,7 @@ namespace WhatHaveIDone.Core.ViewModels
             UpdateTaskStatistics();
         }
 
-        private void UpdateTaskStatistics ()
+        private void UpdateTaskStatistics()
         {
             TaskStatistics = Tasks.
                             Where(x => x.End.HasValue).

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Threading;
 using WhatHaveIDone.Core.CoreAbstractions;
 
@@ -11,13 +9,12 @@ namespace WhatHaveIDone.CoreAbstractions
         public IRunningTimer StartTimer(TimeSpan interval, Action action)
         {
             var timer = new DispatcherTimer(DispatcherPriority.Normal);
-            
+
             timer.Interval = interval;
 
             var runningTimer = new RunningTimer(timer, action);
             return runningTimer;
         }
-
 
         private class RunningTimer : IRunningTimer
         {
@@ -43,6 +40,5 @@ namespace WhatHaveIDone.CoreAbstractions
                 _action?.Invoke();
             }
         }
-        
     }
 }

@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Shouldly;
 using System;
-using System.Globalization;
 using System.Linq;
 using WhatHaveIDone.Core.Util;
 
@@ -32,7 +31,6 @@ namespace WhatHaveIDone.Test.Util
         }
 
         [Test]
-        
         public void GetNextFullHour_DateContainsMinuteFractions_ShouldGetNextFullHour([Range(0, 25)] int hourOffset)
         {
             //arrange
@@ -46,7 +44,6 @@ namespace WhatHaveIDone.Test.Util
         }
 
         [Test]
-
         public void GetNextFullHour_DateIsOnFullHour_ShouldGetNextFullHour()
         {
             //arrange
@@ -59,9 +56,7 @@ namespace WhatHaveIDone.Test.Util
             (result - dateWithMinuteFraction).TotalMinutes.ShouldBe(60d);
         }
 
-
         [Test]
-        
         public void IterateFullHoursUntil_WinterToSummerTime_ShouldNotIncludeInvalidTime()
         {
             NewMethod();
@@ -86,7 +81,6 @@ namespace WhatHaveIDone.Test.Util
         }
 
         [Test]
-
         public void IterateFullHoursUntil_DayLightSavings_ShouldInclude()
         {
             //arrange

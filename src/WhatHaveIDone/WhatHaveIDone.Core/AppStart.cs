@@ -11,7 +11,6 @@ namespace WhatHaveIDone.Core
         public AppStart(IMvxApplication app,
                 IMvxNavigationService navigationService) : base(app, navigationService)
         {
-
         }
 
         protected override Task NavigateToFirstViewModel(object hint = null)

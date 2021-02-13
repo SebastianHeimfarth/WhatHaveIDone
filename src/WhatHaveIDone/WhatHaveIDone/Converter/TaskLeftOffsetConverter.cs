@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Data;
 using System.Windows;
+using System.Windows.Data;
 using WhatHaveIDone.CustomControls;
 
 namespace WhatHaveIDone.Converter
@@ -10,7 +10,7 @@ namespace WhatHaveIDone.Converter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if(values != null && values.Length == 4 && values[0] is double parentWidth && values[1] is DateTime timeLineStart && values[2] is DateTime timeLineEnd && values[3] is DateTime taskBegin)
+            if (values != null && values.Length == 4 && values[0] is double parentWidth && values[1] is DateTime timeLineStart && values[2] is DateTime timeLineEnd && values[3] is DateTime taskBegin)
             {
                 double left;
                 if (taskBegin <= timeLineStart || timeLineEnd == timeLineStart)
@@ -20,7 +20,7 @@ namespace WhatHaveIDone.Converter
                 else
                 {
                     var scalingPerMinute = parentWidth / ((timeLineEnd - timeLineStart).TotalMinutes + 2 * TaskTimelineControl.ExtraSpacingOnBeginningAndEnd);
-                    left = ((taskBegin - timeLineStart).TotalMinutes + TaskTimelineControl.ExtraSpacingOnBeginningAndEnd) * scalingPerMinute ;
+                    left = ((taskBegin - timeLineStart).TotalMinutes + TaskTimelineControl.ExtraSpacingOnBeginningAndEnd) * scalingPerMinute;
                 }
 
                 return new Thickness(left, 5, 0, 0);
@@ -34,7 +34,4 @@ namespace WhatHaveIDone.Converter
             throw new NotSupportedException();
         }
     }
-
-
-
 }

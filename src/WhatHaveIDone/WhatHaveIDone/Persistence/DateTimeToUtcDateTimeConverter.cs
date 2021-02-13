@@ -5,9 +5,8 @@ namespace WhatHaveIDone.Persistence
 {
     public class DateTimeToUtcDateTimeConverter : ValueConverter<DateTime, DateTime>
     {
-        public DateTimeToUtcDateTimeConverter(): base(x=> DateTime.SpecifyKind(x, DateTimeKind.Utc), x => DateTime.SpecifyKind(x, DateTimeKind.Utc))
+        public DateTimeToUtcDateTimeConverter() : base(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => DateTime.SpecifyKind(x, DateTimeKind.Utc))
         {
-
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WhatHaveIDone.Core
+﻿namespace WhatHaveIDone.Core
 {
     public interface IMessageBoxService
     {

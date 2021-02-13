@@ -29,9 +29,6 @@ namespace WhatHaveIDone
             notificationView.DataContext = notificationViewModel;
 
             Mvx.IoCProvider.RegisterSingleton(new NotificationService(notificationView));
-
-
-            
         }
 
         private static ITaskDbContext CreateDataContext()

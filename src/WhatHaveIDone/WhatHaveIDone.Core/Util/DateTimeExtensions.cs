@@ -12,9 +12,9 @@ namespace WhatHaveIDone.Core.Util
 
         public static DateTime GetNextFullHour(this DateTime dateTime)
         {
-            var nextHour = (int) Math.Ceiling(dateTime.TimeOfDay.TotalHours);
+            var nextHour = (int)Math.Ceiling(dateTime.TimeOfDay.TotalHours);
 
-            if(nextHour == dateTime.TimeOfDay.TotalHours)
+            if (nextHour == dateTime.TimeOfDay.TotalHours)
             {
                 return dateTime.AddHours(1);
             }
@@ -26,14 +26,13 @@ namespace WhatHaveIDone.Core.Util
         {
             var currentTime = fromUtc.GetNextFullHour();
 
-            if(currentTime == fromUtc.AddHours(1))
-            {            
+            if (currentTime == fromUtc.AddHours(1))
+            {
                 yield return fromUtc;
             }
 
-            while(currentTime <= toUtc)
+            while (currentTime <= toUtc)
             {
-                
                 yield return currentTime;
 
                 currentTime = currentTime.AddHours(1);

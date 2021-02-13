@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Controls;
 
 namespace WhatHaveIDone.UITest.TestCases
@@ -10,6 +9,7 @@ namespace WhatHaveIDone.UITest.TestCases
     public interface ITestCase
     {
         string Name { get; }
+
         UserControl CreateControl();
     }
 
@@ -27,7 +27,7 @@ namespace WhatHaveIDone.UITest.TestCases
 
             return testCaseCollections.
                 Select(x => Activator.CreateInstance(x)).
-                Cast<ITestCaseCollection>(). 
+                Cast<ITestCaseCollection>().
                 SelectMany(x => x.GetAllTestCases());
         }
     }

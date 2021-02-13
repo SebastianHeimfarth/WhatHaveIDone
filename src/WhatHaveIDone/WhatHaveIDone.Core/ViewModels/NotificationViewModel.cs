@@ -1,8 +1,6 @@
 ﻿using MvvmCross.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WhatHaveIDone.Core.CoreAbstractions;
 using WhatHaveIDone.Core.Persistence;
@@ -33,7 +31,7 @@ namespace WhatHaveIDone.Core.ViewModels
             var tasks = await _dbContext.GetTasksInIntervalAsync(DateTime.Today.ToUniversalTime(), DateTime.Today.AddDays(1).ToUniversalTime());
 
             var runningTask = tasks.FirstOrDefault(x => !x.End.HasValue);
-            if(runningTask != null)
+            if (runningTask != null)
             {
                 CurrentTask = ViewModelMapper.MapTaskToViewModel(runningTask);
                 IsTaskRunning = true;
@@ -49,7 +47,6 @@ namespace WhatHaveIDone.Core.ViewModels
         {
             get { return _currentTask; }
             set { SetProperty(ref _currentTask, value); }
-
         }
 
         private void UpdateRunningTask()

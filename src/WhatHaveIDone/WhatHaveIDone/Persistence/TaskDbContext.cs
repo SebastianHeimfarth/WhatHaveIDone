@@ -21,7 +21,7 @@ namespace WhatHaveIDone.Persistence
 
         public async Task<TaskModel> CreateTaskAsync(string taskName, TaskCategory category, string comment, DateTime begin)
         {
-            var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin, Category = category};
+            var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin, Category = category };
 
             await Tasks.AddAsync(task);
             await SaveChangesAsync();
@@ -31,7 +31,7 @@ namespace WhatHaveIDone.Persistence
         public async Task<bool> DeleteTaskById(Guid id)
         {
             var task = await GetTaskByIdAsync(id);
-            if(task!=null)
+            if (task != null)
             {
                 Tasks.Remove(task);
                 await SaveChangesAsync();
@@ -69,7 +69,6 @@ namespace WhatHaveIDone.Persistence
                 entity.HasKey(e => e.Id);
                 entity.Property(x => x.Begin).HasConversion(new DateTimeToUtcDateTimeConverter());
                 entity.Property(x => x.End).HasConversion(new DateTimeToUtcDateTimeConverter());
-
             });
 
             var colorToIntegerConverter = new ColorToIntegerConverter();
@@ -79,7 +78,7 @@ namespace WhatHaveIDone.Persistence
                 entity.HasKey(e => e.Id);
                 entity.Property(x => x.Color)
                     .HasConversion(colorToIntegerConverter);
-                
+
                 entity.HasData(
                     new TaskCategory { Name = "Work", Color = Color.Beige, Id = Guid.Parse("31F59466-711A-46FE-B3F9-D6DB633440B1") },
                     new TaskCategory { Name = "Meeting", Color = Color.FromArgb(19, 173, 158), Id = Guid.Parse("44435569-C463-40AF-8F78-34CDBE035D8D") },

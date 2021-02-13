@@ -12,9 +12,9 @@ namespace WhatHaveIDone.Converter
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if(values != null && values.Length == 2 && values[0] is TaskViewModel task && values[1] is TaskViewModel selectedTask)
+            if (values != null && values.Length == 2 && values[0] is TaskViewModel task && values[1] is TaskViewModel selectedTask)
             {
-                if(task == selectedTask)
+                if (task == selectedTask)
                 {
                     return BorderThicknessWhenElementIsSelected;
                 }
@@ -28,5 +28,4 @@ namespace WhatHaveIDone.Converter
             throw new NotImplementedException();
         }
     }
-
 }
