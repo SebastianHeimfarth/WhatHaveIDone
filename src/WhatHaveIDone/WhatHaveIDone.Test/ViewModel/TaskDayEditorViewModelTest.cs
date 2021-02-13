@@ -35,8 +35,8 @@ namespace WhatHaveIDone.Test.ViewModel
 
             //assert
             sut.TaskStatistics.ShouldNotBeNull();
-            sut.TaskStatistics.Single(x => x.Category == category1).TotalMinutes.ShouldBe((1 + 2) * 60);
-            sut.TaskStatistics.Single(x => x.Category == category2).TotalMinutes.ShouldBe(4 * 60);
+            sut.TaskStatistics.Single(x => x.Category == category1).TimeSpan.TotalMinutes.ShouldBe((1 + 2) * 60);
+            sut.TaskStatistics.Single(x => x.Category == category2).TimeSpan.TotalMinutes.ShouldBe(4 * 60);
         }
 
         [Test]

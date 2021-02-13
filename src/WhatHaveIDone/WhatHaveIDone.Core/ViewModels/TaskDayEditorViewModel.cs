@@ -212,7 +212,7 @@ namespace WhatHaveIDone.Core.ViewModels
             {
                 _categories.Add(category);
             }
-            CategoryForNewTask = taskCategories.Single(x => x.Name == "Default");
+            CategoryForNewTask = taskCategories.Single(x => x.Name == "Work");
 
             var tasksForThisWeek = await _taskDbContext.GetTasksInIntervalAsync(DayInLocalTime.Date.ToUniversalTime(), DayInLocalTime.Date.AddDays(1).ToUniversalTime());
 
@@ -271,6 +271,7 @@ namespace WhatHaveIDone.Core.ViewModels
             CurrentTask.End = DateTime.UtcNow;
             IsTaskPaused = true;
             RaisePropertyChanged(() => CanMoveTaskEnd);
+            UpdateTaskStatistics();
         }
 
         
@@ -284,45 +285,27 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private void OnTaskCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            UpdateTaskStatistics();
+        }
+
+        private void UpdateTaskStatistics ()
+        {
             TaskStatistics = Tasks.
-                Where(x => x.End.HasValue).
-                GroupBy(x => x.Category).
-                Select(x => new TaskStatisticViewModel
-                {
-                    Category = x.Key,
-                    TotalMinutes = Convert.ToInt32(x.Sum(y => (y.End.Value - y.Begin).TotalMinutes))
-                }).ToList();
+                            Where(x => x.End.HasValue).
+                            GroupBy(x => x.Category).
+                            Select(x => new TaskStatisticViewModel
+                            {
+                                Category = x.Key,
+                                TimeSpan = new TimeSpan(x.Sum(y => (y.End.Value - y.Begin).Ticks))
+                            }).ToList();
         }
 
         private async Task UpdateTask(TaskViewModel taskViewModel)
         {
             var taskModel = await _taskDbContext.GetTaskByIdAsync(taskViewModel.Id);
             UpdateTaskModel(taskModel, taskViewModel);
+            UpdateTaskStatistics();
             await _taskDbContext.SaveChangesAsync();
-        }
-    }
-
-    public class TaskStatisticViewModel : MvxViewModel
-    {
-        private TaskCategory _category;
-        private int _totalMinutes;
-
-        public TaskCategory Category
-        {
-            get => _category;
-            set
-            {
-                SetProperty(ref _category, value);
-            }
-        }
-
-        public int TotalMinutes
-        {
-            get => _totalMinutes;
-            set
-            {
-                SetProperty(ref _totalMinutes, value);
-            }
         }
     }
 }

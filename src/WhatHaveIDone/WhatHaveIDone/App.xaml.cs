@@ -1,15 +1,13 @@
-﻿using MvvmCross;
-using MvvmCross.Core;
+﻿using MvvmCross.Core;
 using MvvmCross.Platforms.Wpf.Core;
 using MvvmCross.Platforms.Wpf.Views;
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Forms;
-using WhatHaveIDone.Core.Persistence;
 
-[assembly:InternalsVisibleTo("WhatHaveIDone.Test")]
-[assembly:InternalsVisibleTo("DynamicProxyGenAssembly2")]
+[assembly: InternalsVisibleTo("WhatHaveIDone.Test")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace WhatHaveIDone
 {
@@ -54,17 +52,20 @@ namespace WhatHaveIDone
 
         private void CreateSystemTray()
         {
-            _systemTrayIcon = new NotifyIcon();
-            _systemTrayIcon.Icon = new System.Drawing.Icon("./Assets/TrayIcon.ico");
-            _systemTrayIcon.Visible = true;
-            _systemTrayIcon.Text = "What have I done?";
+            _systemTrayIcon = new NotifyIcon
+            {
+                Icon = new System.Drawing.Icon("./Assets/TrayIcon.ico"),
+                Visible = true,
+                Text = "What have I done?"
+            };
             _systemTrayIcon.DoubleClick += SystemTrayIcon_DoubleClick;
             _systemTrayIcon.ContextMenuStrip = CreateContextMenuForSystemTray();
         }
 
-        private void ShowApp()
+        public void ShowApp()
         {
             this.MainWindow.Show();
+            this.MainWindow.Activate();
         }
 
         private void SystemTrayContextMenu_Click(object sender, System.EventArgs e)

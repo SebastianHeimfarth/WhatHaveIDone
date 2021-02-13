@@ -12,390 +12,13 @@
     x:Name="_taskDayEditor"
     d:DesignHeight="450" d:DesignWidth="800">
     <views:MvxWpfView.Resources>
-
-
-
-<!--  SCROLLVIEWER -->
-
-        <SolidColorBrush x:Key="StandardBorderBrush" Color="#888" />
-        <SolidColorBrush x:Key="StandardBackgroundBrush" Color="#FFF" />
-        <SolidColorBrush x:Key="HoverBorderBrush" Color="#DDD" />
-        <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="Gray" />
-        <SolidColorBrush x:Key="SelectedForegroundBrush" Color="White" />
-        <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
-        <SolidColorBrush x:Key="NormalBrush" Color="#888" />
-        <SolidColorBrush x:Key="NormalBorderBrush" Color="#888" />
-        <SolidColorBrush x:Key="HorizontalNormalBrush" Color="#888" />
-        <SolidColorBrush x:Key="HorizontalNormalBorderBrush" Color="#888" />
-        <LinearGradientBrush x:Key="ListBoxBackgroundBrush"
-            StartPoint="0,0" EndPoint="1,0.001">
-            <GradientBrush.GradientStops>
-                <GradientStopCollection>
-                    <GradientStop Color="White" Offset="0.0" />
-                    <GradientStop Color="White" Offset="0.6" />
-                    <GradientStop Color="#DDDDDD" Offset="1.2"/>
-                </GradientStopCollection>
-            </GradientBrush.GradientStops>
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="StandardBrush"
-            StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
-                <GradientStopCollection>
-                    <GradientStop Color="#FFF" Offset="0.0"/>
-                    <GradientStop Color="#CCC" Offset="1.0"/>
-                </GradientStopCollection>
-            </GradientBrush.GradientStops>
-        </LinearGradientBrush>
-        <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
-        <LinearGradientBrush x:Key="PressedBrush"
-            StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
-                <GradientStopCollection>
-                    <GradientStop Color="#BBB" Offset="0.0"/>
-                    <GradientStop Color="#EEE" Offset="0.1"/>
-                    <GradientStop Color="#EEE" Offset="0.9"/>
-                    <GradientStop Color="#FFF" Offset="1.0"/>
-                </GradientStopCollection>
-            </GradientBrush.GradientStops>
-        </LinearGradientBrush>
-
-        <!-- SrollViewer ScrollBar Repeat Buttons (at each end) -->
-        <Style x:Key="ScrollBarLineButton" TargetType="{x:Type RepeatButton}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
-            <Setter Property="Focusable" Value="false"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type RepeatButton}">
-                        <Border
-          Name="Border"
-          Margin="1"
-          CornerRadius="2"
-          Background="#59585E"
-          BorderBrush="#59585E"
-          BorderThickness="1">
-                            <Path
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Fill="{StaticResource GlyphBrush}"
-            Data="{Binding Path=Content,
-                RelativeSource={RelativeSource TemplatedParent}}" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsPressed" Value="true">
-                                <Setter TargetName="Border" Property="Background"
-                                Value="{StaticResource PressedBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground"
-                                Value="{StaticResource DisabledForegroundBrush}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <!-- SrollViewer ScrollBar Repeat Buttons (The part in the middle, 
-             not the thumb the long area between the buttons ) -->
-        <Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
-            <Setter Property="IsTabStop" Value="false"/>
-            <Setter Property="Focusable" Value="false"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type RepeatButton}">
-                        <Border Background="Transparent" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <!-- ScrollViewer ScrollBar Thumb, that part that can be dragged
-            up/down or left/right Buttons -->
-        <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
-            <Setter Property="IsTabStop" Value="false"/>
-            <Setter Property="Focusable" Value="false"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Border
-          CornerRadius="2"
-          Background="{TemplateBinding Background}"
-          BorderBrush="{TemplateBinding BorderBrush}"
-          BorderThickness="1" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <ControlTemplate x:Key="VerticalScrollBar"
-            TargetType="{x:Type ScrollBar}">
-            <Grid >
-                <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="18"/>
-                    <RowDefinition Height="0.00001*"/>
-                    <RowDefinition MaxHeight="18"/>
-                </Grid.RowDefinitions>
-                <Border
-      Grid.RowSpan="3"
-      CornerRadius="2"
-      Background="#677e80" />
-                <RepeatButton
-      Grid.Row="0"
-      Style="{StaticResource ScrollBarLineButton}"
-      Height="18"
-      Command="ScrollBar.LineUpCommand"
-      Content="M 0 4 L 8 4 L 4 0 Z" />
-                <Track
-      Name="PART_Track"
-      Grid.Row="1"
-      IsDirectionReversed="true">
-                    <Track.DecreaseRepeatButton>
-                        <RepeatButton
-          Style="{StaticResource ScrollBarPageButton}"
-          Command="ScrollBar.PageUpCommand" />
-                    </Track.DecreaseRepeatButton>
-                    <Track.Thumb>
-                        <Thumb
-          Style="{StaticResource ScrollBarThumb}"
-          Margin="1,0,1,0"
-          Background="#59585E"
-          BorderBrush="#59585E" />
-                    </Track.Thumb>
-                    <Track.IncreaseRepeatButton>
-                        <RepeatButton
-          Style="{StaticResource ScrollBarPageButton}"
-          Command="ScrollBar.PageDownCommand" />
-                    </Track.IncreaseRepeatButton>
-                </Track>
-                <RepeatButton
-      Grid.Row="3"
-      Style="{StaticResource ScrollBarLineButton}"
-      Height="18"
-      Command="ScrollBar.LineDownCommand"
-      Content="M 0 0 L 4 4 L 8 0 Z"/>
-            </Grid>
-        </ControlTemplate>
-        <!-- HorizontalScrollBar Template using the previously created Templates -->
-        <ControlTemplate x:Key="HorizontalScrollBar"
-            TargetType="{x:Type ScrollBar}">
-            <Grid >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition MaxWidth="18"/>
-                    <ColumnDefinition Width="0.00001*"/>
-                    <ColumnDefinition MaxWidth="18"/>
-                </Grid.ColumnDefinitions>
-                <Border
-      Grid.ColumnSpan="3"
-      CornerRadius="2"
-      Background="#677e80" />
-                <RepeatButton
-      Grid.Column="0"
-      Style="{StaticResource ScrollBarLineButton}"
-      Width="18"
-      Command="ScrollBar.LineLeftCommand"
-      Content="M 4 0 L 4 8 L 0 4 Z" />
-                <Track
-      Name="PART_Track"
-      Grid.Column="1"
-      IsDirectionReversed="False">
-                    <Track.DecreaseRepeatButton>
-                        <RepeatButton
-          Style="{StaticResource ScrollBarPageButton}"
-          Command="ScrollBar.PageLeftCommand" />
-                    </Track.DecreaseRepeatButton>
-                    <Track.Thumb>
-                        <Thumb
-          Style="{StaticResource ScrollBarThumb}"
-          Margin="0,1,0,1"
-          Background="#59585E"
-          BorderBrush="#59585E" />
-                    </Track.Thumb>
-                    <Track.IncreaseRepeatButton>
-                        <RepeatButton
-          Style="{StaticResource ScrollBarPageButton}"
-          Command="ScrollBar.PageRightCommand" />
-                    </Track.IncreaseRepeatButton>
-                </Track>
-                <RepeatButton
-      Grid.Column="3"
-      Style="{StaticResource ScrollBarLineButton}"
-      Width="18"
-      Command="ScrollBar.LineRightCommand"
-      Content="M 0 0 L 4 4 L 0 8 Z"/>
-            </Grid>
-        </ControlTemplate>
-        <!-- Style for overall  ScrollBar -->
-        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
-            <Style.Triggers>
-                <Trigger Property="Orientation" Value="Horizontal">
-                    <Setter Property="Width" Value="Auto"/>
-                    <Setter Property="Height" Value="18" />
-                    <Setter Property="Template"
-                        Value="{StaticResource HorizontalScrollBar}" />
-                </Trigger>
-                <Trigger Property="Orientation" Value="Vertical">
-                    <Setter Property="Width" Value="18"/>
-                    <Setter Property="Height" Value="Auto" />
-                    <Setter Property="Template"
-                        Value="{StaticResource VerticalScrollBar}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!-- Style for overall  ScrollViewer -->
-        <Style x:Key="FavsScrollViewer" TargetType="{x:Type ScrollViewer}">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <ScrollContentPresenter Grid.Column="1"/>
-
-                            <ScrollBar Name="PART_VerticalScrollBar"
-            Value="{TemplateBinding VerticalOffset}"
-            Maximum="{TemplateBinding ScrollableHeight}"
-            ViewportSize="{TemplateBinding ViewportHeight}"
-            Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
-                            <ScrollBar Name="PART_HorizontalScrollBar"
-            Orientation="Horizontal"
-            Grid.Row="1"
-            Grid.Column="1"
-            Value="{TemplateBinding HorizontalOffset}"
-            Maximum="{TemplateBinding ScrollableWidth}"
-            ViewportSize="{TemplateBinding ViewportWidth}"
-            Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
-
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  END SCROLLVIEWER-->
-
-
-
-
-
-
-        <Style TargetType="DockPanel">
-            <Setter Property="Background" Value="#59585E"/>
-        </Style>
-        <Style TargetType="TextBlock">
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontFamily" Value="Verdana"/>
-        </Style>
-
-        <Style x:Key="TextBoxLabelStyle" TargetType="TextBlock">
-            <Setter Property="Margin" Value="10 0 0 2"/>
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="FontFamily" Value="Consolas"/>
-        </Style>
-
-        
-        <Style x:Key="TextInputStyle" TargetType="TextBox">
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontFamily" Value="Verdana"/>
-
-            <Setter Property="Background" Value="#5f87a1"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontFamily" Value="Arial"/>
-            <Setter Property="Margin" Value="10 0 10 15"/>
-            
-        </Style>
-
-        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontFamily" Value="Verdana"/>
-
-            <Setter Property="Background" Value="#5f87a1"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontFamily" Value="Arial"/>
-            <Setter Property="Margin" Value="10 0 10 15"/>
-
-        </Style>
-
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#2c78a8" />
-            <Setter Property="Height" Value="35"/>
-            <Setter Property="Width" Value="110"/>
-            <Setter Property="Margin" Value="10 5 10 5"/>
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="FontFamily" Value="Verdana"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="gd" Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
-                            </ContentPresenter>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#5f95b8" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background" Value="#14384f" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="CloseButtonStyle" TargetType="Button">
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="FontSize" Value="25"/>
-            <Setter Property="FontFamily" Value="Arial"/>
-            <Setter Property="ToolTip" Value="Close (App will still run in Systemtray)"/>
-            <Setter Property="Background" Value="#59585E" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="gd" Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
-                            </ContentPresenter>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#5f95b8" TargetName="gd"></Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converter:StringToShortStringConverter x:Key="StringToShortStringConverter" />
-        <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
-        <converter:NotNullToVisibilityConveter x:Key="NotNullToVisibilityConveter" />
-        <converter:DateTimeUtcToLocalDateTimeConverter x:Key="DateTimeUtcToLocalDateTimeConverter" />
-        <converter:DebugConverter x:Key="DebugConverter" />
-        <converter:RunningTimeToStringConverter x:Key="RunningTimeToStringConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/WhatHaveIDone;component/ResourceDictionaries/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WhatHaveIDone;component/ResourceDictionaries/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WhatHaveIDone;component/ResourceDictionaries/ScrollViewerStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </views:MvxWpfView.Resources>
 
     <DockPanel MouseLeftButtonDown="DockPanel_MouseLeftButtonDown">
@@ -403,7 +26,7 @@
             <DockPanel Height="40" 
                 VerticalAlignment="Top">
 
-                <TextBlock DockPanel.Dock="Left" FontSize="15" FontStyle="Italic" FontFamily="Arial" >What have I done?</TextBlock>
+                <TextBlock DockPanel.Dock="Left" Style="{StaticResource TitleTextStyle}">What have I done?</TextBlock>
 
                 <Button x:Name="MinimizeButton"
                         DockPanel.Dock="Right"
@@ -422,15 +45,92 @@
 
         <Grid DockPanel.Dock="Bottom"> 
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"></RowDefinition>
-                <RowDefinition Height="170"></RowDefinition>
+                <RowDefinition Height="12*"></RowDefinition>
+                <RowDefinition Height="10*"></RowDefinition>
+                <RowDefinition Height="12*"></RowDefinition>
+                <RowDefinition Height="45*"></RowDefinition>
                 <RowDefinition Height="120"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="0" Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Width="60" Height="30" Content="&#9669;" HorizontalAlignment="Right" ToolTip="Previous Day"/>
+                <TextBlock Grid.Column="1" Text="{Binding DayInLocalTime, StringFormat=dd.MM.yyyy}" HorizontalAlignment="Center" Margin="0 15"/>
+                <Button Grid.Column="2" Width="60" Height="30" Content="&#9659;" HorizontalAlignment="Left" ToolTip="Next Day"/>
+            </Grid>
+
+            <Grid Grid.Row="1" Grid.Column="0">
+                <ItemsControl ItemsSource="{Binding TaskStatistics}" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Width="200" Height="22">
+                                <StackPanel.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="FontSize" Value="16"/>
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="10 0 0 0"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <Rectangle Width="20" Height="20" Fill="{Binding Category.Color, Converter={StaticResource DrawingColorToBrushConverter}}"/>
+                                <TextBlock Text="{Binding Category.Name}" />
+
+                                <TextBlock Text="{Binding TimeSpan, StringFormat=hh\\:mm}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+
+
+            <StackPanel Grid.Row="2" Grid.Column="1" Visibility="{Binding IsTaskStarted, Converter={StaticResource BooleanToVisibilityConverter}}" MinHeight="150">
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <TextBlock TextWrapping="Wrap" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                            <Run Text="{Binding CurrentTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
+                            <Run > is running for </Run>
+                            <Run  >
+                                <Run.Text>
+                                    <MultiBinding Converter="{StaticResource RunningTimeToStringConverter}">
+                                        <Binding Path="CurrentTask.Begin" Mode="OneWay"/>
+                                        <Binding Path="CurrentTask.TemporaryEnd" Mode="OneWay"/>
+                                    </MultiBinding>
+                                </Run.Text>
+                            </Run>
+                    </TextBlock>
+
+                    <TextBlock TextWrapping="Wrap" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Run Text="{Binding CurrentTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
+                            <Run Text="* paused *" Foreground ="DarkOrange" />
+                    </TextBlock>
+                    
+                    <Button mvx:Bi.nd="Command StopTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}" ToolTip="Stop running Task" >Stop</Button>
+
+                    <Button mvx:Bi.nd="Command ContinueTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Continue last Task">Continue</Button>
+                    <Button mvx:Bi.nd="Command EndTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="End paused Task">End</Button>
+                </StackPanel>
+                
+
+            </StackPanel>
+
+
+
+
+
+
+
+            <Grid Grid.Row="3" Grid.Column="1" Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}" Background="{StaticResource HighlightedBackgroundColor}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
@@ -458,47 +158,11 @@
                     <TextBox  Text="{Binding Comment, Mode=TwoWay}"  Style="{StaticResource TextInputStyle}" TextWrapping="Wrap" AcceptsReturn="True" Height="40"  />
                 </StackPanel>
                 
-                <Button Grid.Row="3" Grid.Column="2" mvx:Bi.nd="Command StartTaskCommand"  IsEnabled="{Binding CanStartTask}" HorizontalAlignment="Right" >Start</Button>
+                <Button Grid.Row="3" Grid.Column="2" mvx:Bi.nd="Command StartTaskCommand"  IsEnabled="{Binding CanStartTask}" HorizontalAlignment="Right" ToolTip="Start a new Task">Start</Button>
             </Grid>
 
-            <StackPanel Grid.Row="0" Visibility="{Binding IsTaskStarted, Converter={StaticResource BooleanToVisibilityConverter}}" MinHeight="150">
-                <DockPanel >
-                    <TextBlock>
-                        <Run Text="{Binding CurrentTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
-                        <Run> is running for </Run>
-                        <Run  >
-                            <Run.Text>
-                                <MultiBinding Converter="{StaticResource RunningTimeToStringConverter}">
-                                    <Binding Path="CurrentTask.Begin" Mode="OneWay"/>
-                                    <Binding Path="CurrentTask.TemporaryEnd" Mode="OneWay"/>
-                                </MultiBinding>
-                            </Run.Text>
-                        </Run>
-                    </TextBlock>
-
-                    <TextBlock Text="*Paused*" Foreground="DarkOrange" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                    <StackPanel HorizontalAlignment="Right" DockPanel.Dock="Right">
-                        <Button mvx:Bi.nd="Command StopTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}"  >Stop</Button>
-
-                        <Button mvx:Bi.nd="Command ContinueTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" >Continue</Button>
-                        <Button mvx:Bi.nd="Command EndTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}">End</Button>
-                    </StackPanel>
-                </DockPanel>
-            </StackPanel>
-
-
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            <Grid Grid.Row="1" Background="#677e80" Visibility="{Binding SelectedTask, Converter={StaticResource NotNullToVisibilityConveter}}">
+            <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="{StaticResource HighlightedBackgroundColor}" Visibility="{Binding SelectedTask, Converter={StaticResource NotNullToVisibilityConveter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
@@ -535,22 +199,22 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="&#9669;" Grid.Row="0" Grid.Column="0" mvx:Bi.nd="Command MoveTaskBeginLeftCommand"  Width="40" />
+                    <Button Content="&#9669;" Grid.Row="0" Grid.Column="0" mvx:Bi.nd="Command MoveTaskBeginLeftCommand"  Width="40" ToolTip="Move Task Start"/>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="0 5 0 0">
                         <TextBlock Text="Start" Style="{StaticResource TextBoxLabelStyle}" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding SelectedTask.Begin, StringFormat=HH:mm, Converter={StaticResource DateTimeUtcToLocalDateTimeConverter}}" HorizontalAlignment="Center" Margin="0 0 0 0"/>
                     </StackPanel>
-                    <Button Content="&#9659;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command MoveTaskBeginRightCommand"  Width="40" />
+                    <Button Content="&#9659;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command MoveTaskBeginRightCommand"  Width="40" ToolTip="Move Task Start"/>
 
-                    <Button Content="&#9669;" Grid.Row="1" Grid.Column="0" mvx:Bi.nd="Command MoveTaskEndLeftCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <Button Content="&#9669;" Grid.Row="1" Grid.Column="0" mvx:Bi.nd="Command MoveTaskEndLeftCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="0 5 0 0" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <TextBlock Text="End" Style="{StaticResource TextBoxLabelStyle}" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding SelectedTask.End, StringFormat=HH:mm, Converter={StaticResource DateTimeUtcToLocalDateTimeConverter}}" HorizontalAlignment="Center" Margin="0 0 0 0"/>
                     </StackPanel>
-                    <Button Content="&#9659;" Grid.Row="1" Grid.Column="2" mvx:Bi.nd="Command MoveTaskEndRightCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <Button Content="&#9659;" Grid.Row="1" Grid.Column="2" mvx:Bi.nd="Command MoveTaskEndRightCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
                 </Grid>
 
-                <Button Content="&#128465;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command DeleteTaskCommand" HorizontalAlignment="Right" Width="40" />
+                <Button Content="&#128465;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command DeleteTaskCommand" HorizontalAlignment="Right" Width="40" ToolTip="Delete Task"/>
 
                 <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
                     <TextBlock Text="Comment" Style="{StaticResource TextBoxLabelStyle}"/>
@@ -561,7 +225,7 @@
             </Grid>
 
 
-            <ScrollViewer  HorizontalAlignment="Stretch" Grid.Row="2" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" CanContentScroll="True">
+            <ScrollViewer Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" CanContentScroll="True">
                 <customcontrols:TaskTimelineControl x:Name="_taskTimelineControl"
                     Tasks="{Binding DataContext.Tasks, ElementName=_taskDayEditor}" 
                     TimeLineStart="{Binding DataContext.DayUtc, ElementName=_taskDayEditor}" 
@@ -569,7 +233,7 @@
                     SelectedTask="{Binding DataContext.SelectedTask, Mode=TwoWay, ElementName=_taskDayEditor}"
                     Margin="10"
                     Width="1400"
-                    Background="#5f87a1"
+                    Background="{StaticResource SecondaryBackgroundColor}"
                 />
             </ScrollViewer>
             

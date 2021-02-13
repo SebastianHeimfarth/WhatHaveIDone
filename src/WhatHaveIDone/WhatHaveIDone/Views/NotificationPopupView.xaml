@@ -1,0 +1,52 @@
+﻿<Popup x:Class="WhatHaveIDone.Views.NotificationPopupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:WhatHaveIDone.Views" 
+    xmlns:converter="clr-namespace:WhatHaveIDone.Converter"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800"
+       
+    StaysOpen="False"
+    PopupAnimation="Fade"
+    Width="400"
+    Height="220">
+    <Popup.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/WhatHaveIDone;component/ResourceDictionaries/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WhatHaveIDone;component/ResourceDictionaries/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Popup.Resources>
+    <Grid Background="{StaticResource PrimaryBackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="80"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="There is no Task beeing tracked!" Visibility="{Binding IsTaskRunning, Converter={StaticResource InverseBooleanToVisibilityConverter}}" TextWrapping="Wrap"/>
+
+        <StackPanel Visibility="{Binding IsTaskRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="15" Grid.Row="0" Grid.Column="0">
+            <TextBlock Text="{Binding CurrentTask.Name}"  FontWeight="Bold"/>
+            <TextBlock FontStyle="Italic" FontFamily="Consolas">
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource RunningTimeToStringConverter}">
+                        <Binding Path="CurrentTask.Begin" Mode="OneWay"/>
+                        <Binding Path="CurrentTask.TemporaryEnd" Mode="OneWay"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </StackPanel>
+        <StackPanel Background="{StaticResource SecondaryBackgroundColor}" Grid.Column="1" HorizontalAlignment="Stretch">
+            <TextBlock Text="What have I done?" Style="{StaticResource TitleTextStyle}" FontSize="25" Margin="5">
+                <TextBlock.LayoutTransform>
+                    <RotateTransform Angle="90" />
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</Popup>

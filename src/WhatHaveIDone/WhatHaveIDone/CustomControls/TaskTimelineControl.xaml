@@ -28,7 +28,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
 
-                    <Rectangle Stroke="#e08e09"  Fill="{Binding Path=Category.Color, Converter={StaticResource DrawingColorToBrushConverter}}"  Height="{Binding ActualHeight, ElementName=_canvas, Mode=OneWay}" >
+                    <Rectangle Stroke="#e08e09" RadiusX="5" RadiusY="5" Fill="{Binding Path=Category.Color, Converter={StaticResource DrawingColorToBrushConverter}}"  Height="{Binding ActualHeight, ElementName=_canvas, Mode=OneWay}" >
                         <Rectangle.StrokeThickness>
                             <MultiBinding Converter="{StaticResource IsSelectedTaskConverter}" Mode="OneWay">
                                 <Binding Path="."/>

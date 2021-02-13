@@ -29,7 +29,9 @@ namespace WhatHaveIDone.Converter
                         return Math.Max(temporaryWidth, defaultWidth);
                     }
 
-                    return (taskEnd.Value - taskBegin).TotalMinutes * scalingPerMinute;
+                    var minWidth = 5d * scalingPerMinute;
+
+                    return  Math.Max(minWidth, (taskEnd.Value - taskBegin).TotalMinutes * scalingPerMinute);
                 }
             }
 

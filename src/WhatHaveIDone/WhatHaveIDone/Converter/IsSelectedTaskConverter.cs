@@ -7,7 +7,7 @@ namespace WhatHaveIDone.Converter
 {
     public class IsSelectedTaskConverter : IMultiValueConverter
     {
-        private const double BorderThicknessWhenElementIsSelected = 6d;
+        private const double BorderThicknessWhenElementIsSelected = 4d;
         private const double BorderThicknessWhenElementIsNotSelected = 0d;
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

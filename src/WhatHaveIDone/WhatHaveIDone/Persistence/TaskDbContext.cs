@@ -81,10 +81,9 @@ namespace WhatHaveIDone.Persistence
                     .HasConversion(colorToIntegerConverter);
                 
                 entity.HasData(
-               new TaskCategory { Name = "Default", Color = Color.Beige, Id = Guid.Parse("CCC60A19-6231-4486-94B0-6F6F3C093442") },
-                    new TaskCategory { Name = "Work", Color = Color.Red, Id = Guid.Parse("31F59466-711A-46FE-B3F9-D6DB633440B1") },
-                    new TaskCategory { Name = "Meeting", Color = Color.Orange, Id = Guid.Parse("44435569-C463-40AF-8F78-34CDBE035D8D") },
-                    new TaskCategory { Name = "Pause", Color = Color.Green, Id = Guid.Parse("D57D7417-C7F2-4872-A0D6-1D68C9BDC13A") }
+                    new TaskCategory { Name = "Work", Color = Color.Beige, Id = Guid.Parse("31F59466-711A-46FE-B3F9-D6DB633440B1") },
+                    new TaskCategory { Name = "Meeting", Color = Color.FromArgb(19, 173, 158), Id = Guid.Parse("44435569-C463-40AF-8F78-34CDBE035D8D") },
+                    new TaskCategory { Name = "Pause", Color = Color.FromArgb(55, 173, 19), Id = Guid.Parse("D57D7417-C7F2-4872-A0D6-1D68C9BDC13A") }
                 );
             });
         }
