@@ -14,7 +14,8 @@ namespace WhatHaveIDone.Converter
 
                 if (taskEnd.HasValue)
                 {
-                    return $"{taskName} [{taskStart.ToLocalTime():HH:mm}-{taskEnd.Value.ToLocalTime():HH:mm}]";
+                    var duration = taskEnd - taskStart;
+                    return $"{taskName} {duration:hh\\:mm}  [{taskStart.ToLocalTime():HH:mm}-{taskEnd.Value.ToLocalTime():HH:mm}]";
                 }
 
                 return $"{taskName} [{taskStart.ToLocalTime():HH:mm} ...";

@@ -10,4 +10,5 @@
     <converter:DebugConverter x:Key="DebugConverter" />
     <converter:RunningTimeToStringConverter x:Key="RunningTimeToStringConverter" />
     <converter:DrawingColorToBrushConverter x:Key="DrawingColorToBrushConverter" />
+    <converter:TaskViewModelToTaskDurationStringConverter x:Key="TaskViewModelToTaskDurationStringConverter" />
 </ResourceDictionary>

@@ -198,6 +198,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Button Content="&#9669;" Grid.Row="0" Grid.Column="0" mvx:Bi.nd="Command MoveTaskBeginLeftCommand"  Width="40" ToolTip="Move Task Start"/>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="0 5 0 0">
@@ -212,6 +213,11 @@
                         <TextBlock Text="{Binding SelectedTask.End, StringFormat=HH:mm, Converter={StaticResource DateTimeUtcToLocalDateTimeConverter}}" HorizontalAlignment="Center" Margin="0 0 0 0"/>
                     </StackPanel>
                     <Button Content="&#9659;" Grid.Row="1" Grid.Column="2" mvx:Bi.nd="Command MoveTaskEndRightCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
+
+                    <TextBlock Grid.RowSpan="2" Grid.Column="3"  FontStyle="Normal" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">
+                        <Run Text="Dauer" FontFamily="Consolas" FontSize="18"/>
+                        <Run Text="{Binding Path=SelectedTask, Converter={StaticResource TaskViewModelToTaskDurationStringConverter}}"/>
+                    </TextBlock>
                 </Grid>
 
                 <Button Content="&#128465;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command DeleteTaskCommand" HorizontalAlignment="Right" Width="40" ToolTip="Delete Task"/>
@@ -239,11 +245,7 @@
                 />
             </ScrollViewer>
             
-           
-
         </Grid>
-
-
 
     </DockPanel>
 
