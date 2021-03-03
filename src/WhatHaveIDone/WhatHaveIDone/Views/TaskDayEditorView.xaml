@@ -6,8 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
     xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
-    xmlns:converter="clr-namespace:WhatHaveIDone.Converter" 
-    xmlns:customcontrols="clr-namespace:WhatHaveIDone.CustomControls"
+    xmlns:behaviours="clr-namespace:WhatHaveIDone.Behaviours" 
+    xmlns:customcontrols="clr-namespace:WhatHaveIDone.CustomControls" 
     mc:Ignorable="d"
     x:Name="_taskDayEditor"
     d:DesignHeight="450" d:DesignWidth="800">
@@ -61,9 +61,9 @@
                     <ColumnDefinition Width="150"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Width="60" Height="30" Content="&#9669;" HorizontalAlignment="Right" ToolTip="Previous Day" mvx:Bi.nd="Command NavigateToPreviousDayCommand"/>
+                <Button Grid.Column="0" Width="60" Height="30" Content="&#9669;" HorizontalAlignment="Right" ToolTip="Previous Day" mvx:Bi.nd="Command NavigateToPreviousDayCommand" behaviours:ButtonHoldBehaviour.IsActive="True"/>
                 <TextBlock Grid.Column="1" Text="{Binding DayInLocalTime, StringFormat=dd.MM.yyyy}" HorizontalAlignment="Center" Margin="0 15"/>
-                <Button Grid.Column="2" Width="60" Height="30" Content="&#9659;" HorizontalAlignment="Left" ToolTip="Next Day" mvx:Bi.nd="Command NavigateToNextDayCommand"/>
+                <Button Grid.Column="2" Width="60" Height="30" Content="&#9659;" HorizontalAlignment="Left" ToolTip="Next Day" mvx:Bi.nd="Command NavigateToNextDayCommand" behaviours:ButtonHoldBehaviour.IsActive="True"/>
             </Grid>
 
             <Grid Grid.Row="1" Grid.Column="0">
@@ -123,12 +123,6 @@
                 
 
             </StackPanel>
-
-
-
-
-
-
 
             <Grid Grid.Row="3" Grid.Column="1" Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}" Background="{StaticResource HighlightedBackgroundColor}">
                 <Grid.RowDefinitions>
@@ -200,19 +194,19 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="&#9669;" Grid.Row="0" Grid.Column="0" mvx:Bi.nd="Command MoveTaskBeginLeftCommand"  Width="40" ToolTip="Move Task Start"/>
+                    <Button Content="&#9669;" Grid.Row="0" Grid.Column="0" mvx:Bi.nd="Command MoveTaskBeginLeftCommand" behaviours:ButtonHoldBehaviour.IsActive="True" Width="40" ToolTip="Move Task Start"/>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="0 5 0 0">
                         <TextBlock Text="Start" Style="{StaticResource TextBoxLabelStyle}" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding SelectedTask.Begin, StringFormat=HH:mm, Converter={StaticResource DateTimeUtcToLocalDateTimeConverter}}" HorizontalAlignment="Center" Margin="0 0 0 0"/>
                     </StackPanel>
-                    <Button Content="&#9659;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command MoveTaskBeginRightCommand"  Width="40" ToolTip="Move Task Start"/>
+                    <Button Content="&#9659;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command MoveTaskBeginRightCommand" behaviours:ButtonHoldBehaviour.IsActive="True" Width="40" ToolTip="Move Task Start"/>
 
-                    <Button Content="&#9669;" Grid.Row="1" Grid.Column="0" mvx:Bi.nd="Command MoveTaskEndLeftCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
+                    <Button Content="&#9669;" Grid.Row="1" Grid.Column="0" mvx:Bi.nd="Command MoveTaskEndLeftCommand" behaviours:ButtonHoldBehaviour.IsActive="True" Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="0 5 0 0" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <TextBlock Text="End" Style="{StaticResource TextBoxLabelStyle}" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding SelectedTask.End, StringFormat=HH:mm, Converter={StaticResource DateTimeUtcToLocalDateTimeConverter}}" HorizontalAlignment="Center" Margin="0 0 0 0"/>
                     </StackPanel>
-                    <Button Content="&#9659;" Grid.Row="1" Grid.Column="2" mvx:Bi.nd="Command MoveTaskEndRightCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
+                    <Button Content="&#9659;" Grid.Row="1" Grid.Column="2" mvx:Bi.nd="Command MoveTaskEndRightCommand" behaviours:ButtonHoldBehaviour.IsActive="True" Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
 
                     <TextBlock Grid.RowSpan="2" Grid.Column="3"  FontStyle="Normal" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">
                         <Run Text="Dauer" FontFamily="Consolas" FontSize="18"/>
