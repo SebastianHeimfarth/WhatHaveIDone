@@ -23,7 +23,7 @@ namespace WhatHaveIDone.Core.ViewModels
         private readonly ObservableCollection<TaskViewModel> _tasks = new ObservableCollection<TaskViewModel>();
         private string _comment;
 
-        private TaskViewModel _currentTask;
+        private TaskViewModel _runningTask;
 
         private DateTime _dayInLocalTime;
 
@@ -40,7 +40,8 @@ namespace WhatHaveIDone.Core.ViewModels
             StartTaskCommand = new MvxAsyncCommand(StartTask);
             StopTaskCommand = new MvxCommand(StopTask);
             EndTaskCommand = new MvxAsyncCommand(EndTask);
-            ContinueTaskCommand = new MvxAsyncCommand(ContinueTask);
+            ContinuePausedTaskCommand = new MvxAsyncCommand(ContinuePausedTask);
+            ContinueSelectedTaskCommand = new MvxAsyncCommand(ContinueSelectedTask);
             DeleteTaskCommand = new MvxAsyncCommand(DeleteTask);
 
             MoveTaskBeginLeftCommand = new MvxCommand(MoveTaskBeginLeft);
@@ -88,9 +89,9 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private void UpdateRunningTask()
         {
-            if (CurrentTask != null)
+            if (RunningTask != null)
             {
-                CurrentTask.TemporaryEnd = DateTime.UtcNow;
+                RunningTask.TemporaryEnd = DateTime.UtcNow;
             }
         }
 
@@ -102,12 +103,13 @@ namespace WhatHaveIDone.Core.ViewModels
             set { SetProperty(ref _comment, value); }
         }
 
-        public IMvxCommand ContinueTaskCommand { get; }
+        public IMvxCommand ContinuePausedTaskCommand { get; }
+        public IMvxCommand ContinueSelectedTaskCommand { get; }
 
-        public TaskViewModel CurrentTask
+        public TaskViewModel RunningTask
         {
-            get { return _currentTask; }
-            set { SetProperty(ref _currentTask, value); RaisePropertyChanged(() => IsTaskStarted); }
+            get { return _runningTask; }
+            set { SetProperty(ref _runningTask, value); RaisePropertyChanged(() => IsTaskStarted); }
         }
 
         public DateTime DayInLocalTime
@@ -138,7 +140,7 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
-        public bool IsTaskStarted => CurrentTask != null;
+        public bool IsTaskStarted => RunningTask != null;
 
         public TaskViewModel SelectedTask
         {
@@ -218,20 +220,28 @@ namespace WhatHaveIDone.Core.ViewModels
             return Load();
         }
 
-        public async Task ContinueTask()
+        public  Task ContinuePausedTask()
         {
-            CurrentTask = await CreateContinuationTask();
-            Tasks.Add(CurrentTask);
-            IsTaskPaused = false;
+            return ContinueTask(RunningTask);
+        }
+
+        public Task ContinueSelectedTask()
+        {
+            if(RunningTask == null)
+            {
+                return ContinueTask(SelectedTask);
+            }
+
+            return Task.CompletedTask;
         }
 
         public async Task EndTask()
         {
-            CurrentTask.End = DateTime.UtcNow;
-            await UpdateTask(CurrentTask);
+            RunningTask.End = DateTime.UtcNow;
+            await UpdateTask(RunningTask);
 
             IsTaskPaused = false;
-            CurrentTask = null;
+            RunningTask = null;
         }
 
         public async Task Load()
@@ -252,7 +262,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
                 if (!taskViewModel.End.HasValue)
                 {
-                    CurrentTask = taskViewModel;
+                    RunningTask = taskViewModel;
                 }
             }
         }
@@ -269,8 +279,8 @@ namespace WhatHaveIDone.Core.ViewModels
         {
             var task = await _taskDbContext.CreateTaskAsync(TaskName, CategoryForNewTask, Comment, DateTime.UtcNow);
 
-            CurrentTask = MapTaskToViewModel(task);
-            Tasks.Add(CurrentTask);
+            RunningTask = MapTaskToViewModel(task);
+            Tasks.Add(RunningTask);
 
             TaskName = null;
             Comment = null;
@@ -284,9 +294,9 @@ namespace WhatHaveIDone.Core.ViewModels
                 {
                     var task = SelectedTask;
 
-                    if (CurrentTask == task)
+                    if (RunningTask == task)
                     {
-                        CurrentTask = null;
+                        RunningTask = null;
                     }
 
                     Tasks.Remove(task);
@@ -298,15 +308,22 @@ namespace WhatHaveIDone.Core.ViewModels
 
         public void StopTask()
         {
-            CurrentTask.End = DateTime.UtcNow;
+            RunningTask.End = DateTime.UtcNow;
             IsTaskPaused = true;
             RaisePropertyChanged(() => CanMoveTaskEnd);
             UpdateTaskStatistics();
         }
 
-        private async Task<TaskViewModel> CreateContinuationTask()
+        private async Task ContinueTask(TaskViewModel taskViewModel)
         {
-            var taskModel = await _taskDbContext.CreateTaskAsync(CurrentTask.Name, CurrentTask.Category, CurrentTask.Comment, DateTime.UtcNow);
+            RunningTask = await CreateContinuationTask(taskViewModel);
+            Tasks.Add(RunningTask);
+            IsTaskPaused = false;
+        }
+
+        private async Task<TaskViewModel> CreateContinuationTask(TaskViewModel taskViewModel)
+        {
+            var taskModel = await _taskDbContext.CreateTaskAsync(taskViewModel.Name, taskViewModel.Category, taskViewModel.Comment, DateTime.UtcNow);
 
             return MapTaskToViewModel(taskModel);
         }

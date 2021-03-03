@@ -4,7 +4,8 @@
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <converter:StringToShortStringConverter x:Key="StringToShortStringConverter" />
     <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
-    <converter:NotNullToVisibilityConveter x:Key="NotNullToVisibilityConveter" />
+    <converter:NullToVisibilityConveter x:Key="NullToVisibilityConveter" IsInverted="False"/>
+    <converter:NullToVisibilityConveter x:Key="NotNullToVisibilityConveter" IsInverted="True"/>
     <converter:DateTimeUtcToLocalDateTimeConverter x:Key="DateTimeUtcToLocalDateTimeConverter" />
     <converter:DebugConverter x:Key="DebugConverter" />
     <converter:RunningTimeToStringConverter x:Key="RunningTimeToStringConverter" />

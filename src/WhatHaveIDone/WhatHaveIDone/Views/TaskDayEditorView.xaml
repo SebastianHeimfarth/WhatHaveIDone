@@ -98,26 +98,26 @@
 
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                     <TextBlock TextWrapping="Wrap" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                            <Run Text="{Binding CurrentTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
+                            <Run Text="{Binding RunningTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
                             <Run > is running for </Run>
                             <Run  >
                                 <Run.Text>
                                     <MultiBinding Converter="{StaticResource RunningTimeToStringConverter}">
-                                        <Binding Path="CurrentTask.Begin" Mode="OneWay"/>
-                                        <Binding Path="CurrentTask.TemporaryEnd" Mode="OneWay"/>
+                                        <Binding Path="RunningTask.Begin" Mode="OneWay"/>
+                                        <Binding Path="RunningTask.TemporaryEnd" Mode="OneWay"/>
                                     </MultiBinding>
                                 </Run.Text>
                             </Run>
                     </TextBlock>
 
                     <TextBlock TextWrapping="Wrap" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Run Text="{Binding CurrentTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
+                            <Run Text="{Binding RunningTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
                             <Run Text="* paused *" Foreground ="DarkOrange" />
                     </TextBlock>
                     
                     <Button mvx:Bi.nd="Command StopTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}" ToolTip="Stop running Task" >Stop</Button>
 
-                    <Button mvx:Bi.nd="Command ContinueTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Continue last Task">Continue</Button>
+                    <Button mvx:Bi.nd="Command ContinuePausedTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Continue last Task">Continue</Button>
                     <Button mvx:Bi.nd="Command EndTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="End paused Task">End</Button>
                 </StackPanel>
                 
@@ -215,6 +215,8 @@
                 </Grid>
 
                 <Button Content="&#128465;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command DeleteTaskCommand" HorizontalAlignment="Right" Width="40" ToolTip="Delete Task"/>
+
+                <Button Content="Continue" Grid.Row="1" Grid.Column="2" mvx:Bi.nd="Command ContinueSelectedTaskCommand" HorizontalAlignment="Right" Visibility="{Binding RunningTask, Converter={StaticResource NullToVisibilityConveter}}" ToolTip="Continue Task"/>
 
                 <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
                     <TextBlock Text="Comment" Style="{StaticResource TextBoxLabelStyle}"/>

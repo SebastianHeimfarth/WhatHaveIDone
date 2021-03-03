@@ -22,6 +22,44 @@ namespace WhatHaveIDone.Test.ViewModel
         private TaskDbContext DataContext { get; set; }
 
         [Test]
+        public async Task ContinueSelectedTask_NoOtherTaskIsRunning_ShouldCreateNewTask()
+        {
+            //arrange
+            var sut = await CreateTaskListViewModel();
+
+            var selectedTask = await DataContext.CreateTaskAsync("selectedTask", _defaultCategory, "comment", _dayInLocalTime.ToUniversalTime());
+            selectedTask.End = selectedTask.Begin.AddHours(1);
+            sut.SelectedTask = ViewModelMapper.MapTaskToViewModel(selectedTask);
+            await sut.Load();
+
+            //act
+            await sut.ContinueSelectedTask();
+
+            //assert
+            sut.RunningTask.ShouldNotBeNull();
+            sut.Tasks.Count().ShouldBe(2, "because it contains original task and new task");
+        }
+
+        [Test]
+        public async Task ContinueSelectedTask_OtherTaskIsRunning_ShouldDoNothing()
+        {
+            //arrange
+            var sut = await CreateTaskListViewModel();
+
+            await DataContext.CreateTaskAsync("runningTask", _defaultCategory, "comment", _dayInLocalTime.ToUniversalTime());
+            var selectedTask = await DataContext.CreateTaskAsync("selectedTask", _defaultCategory, "comment", _dayInLocalTime.ToUniversalTime());
+            selectedTask.End = selectedTask.Begin.AddHours(1);
+            sut.SelectedTask = ViewModelMapper.MapTaskToViewModel(selectedTask);
+            await sut.Load();
+            
+            //act
+            await sut.ContinueSelectedTask();
+
+            //assert
+            sut.Tasks.Count().ShouldBe(2, "because it contains only running task and selected task");
+        }
+
+        [Test]
         public async Task When_TaskIsAdded_ShouldUpdateTaskStatistics()
         {
             //arrange
@@ -73,7 +111,7 @@ namespace WhatHaveIDone.Test.ViewModel
         }
 
         [Test]
-        public async Task Load_UnfinishedTaskIsAvailable_CurrentTaskShouldBeUnfinishedTask()
+        public async Task Load_UnfinishedTaskIsAvailable_RunningTaskShouldBeUnfinishedTask()
         {
             //arrange
             var sut = await CreateTaskListViewModel();
@@ -87,7 +125,7 @@ namespace WhatHaveIDone.Test.ViewModel
             await sut.Load();
 
             //assert
-            sut.CurrentTask.Name.ShouldBe("unfinishedTask");
+            sut.RunningTask.Name.ShouldBe("unfinishedTask");
         }
 
         [Test]
@@ -130,11 +168,11 @@ namespace WhatHaveIDone.Test.ViewModel
             sut.StopTask();
 
             //act
-            await sut.ContinueTask();
+            await sut.ContinuePausedTask();
 
             //assert
             sut.IsTaskPaused.ShouldBeFalse();
-            sut.CurrentTask.ShouldNotBeNull();
+            sut.RunningTask.ShouldNotBeNull();
         }
 
         [Test]
@@ -146,7 +184,7 @@ namespace WhatHaveIDone.Test.ViewModel
 
             //act
             sut.StopTask();
-            await sut.ContinueTask();
+            await sut.ContinuePausedTask();
             await sut.EndTask();
 
             //assert
