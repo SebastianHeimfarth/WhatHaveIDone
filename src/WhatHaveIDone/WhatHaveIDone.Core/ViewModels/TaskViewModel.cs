@@ -6,20 +6,22 @@ namespace WhatHaveIDone.Core.ViewModels
 {
     public class TaskViewModel : MvxViewModel
     {
-        private string _name;
+        private DateTime _begin;
         private TaskCategory _category;
         private string _comment;
-        private DateTime _begin;
-        private DateTime _temporaryEnd = DateTime.UtcNow;
+        private TimeSpan? _duration;
         private DateTime? _end;
         private Guid _id;
+        private string _name;
+        private DateTime _temporaryEnd = DateTime.UtcNow;
 
-        public Guid Id
+        public DateTime Begin
         {
-            get => _id;
+            get => _begin;
             set
             {
-                SetProperty(ref _id, value);
+                SetProperty(ref _begin, value);
+                SetDuration();
             }
         }
 
@@ -32,15 +34,6 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                SetProperty(ref _name, value);
-            }
-        }
-
         public string Comment
         {
             get => _comment;
@@ -50,12 +43,40 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
-        public DateTime Begin
+        public TimeSpan? Duration
         {
-            get => _begin;
+            get => _duration;
             set
             {
-                SetProperty(ref _begin, value);
+                SetProperty(ref _duration, value);
+            }
+        }
+
+        public DateTime? End
+        {
+            get => _end;
+            set
+            {
+                SetProperty(ref _end, value);
+                SetDuration();
+            }
+        }
+
+        public Guid Id
+        {
+            get => _id;
+            set
+            {
+                SetProperty(ref _id, value);
+            }
+        }
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                SetProperty(ref _name, value);
             }
         }
 
@@ -68,13 +89,9 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
-        public DateTime? End
+        private void SetDuration()
         {
-            get => _end;
-            set
-            {
-                SetProperty(ref _end, value);
-            }
+            Duration = End.HasValue ? End - Begin : null;
         }
     }
 }

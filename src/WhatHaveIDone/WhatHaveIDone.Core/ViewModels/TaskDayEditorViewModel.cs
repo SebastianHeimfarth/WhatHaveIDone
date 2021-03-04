@@ -70,7 +70,7 @@ namespace WhatHaveIDone.Core.ViewModels
             SelectedTask.End = SelectedTask.End.Value.AddMinutes(-TaskMovingAmountInMinutes);
         }
 
-        public bool CanMoveTaskEnd => SelectedTask != null && SelectedTask.End.HasValue;
+        public bool IsSelectedTaskFinished => SelectedTask != null && SelectedTask.End.HasValue;
 
         private void MoveTaskBeginRight()
         {
@@ -152,7 +152,7 @@ namespace WhatHaveIDone.Core.ViewModels
                     UpdateTask(_selectedTask).Wait();
                 }
                 SetProperty(ref _selectedTask, value);
-                RaisePropertyChanged(() => CanMoveTaskEnd);
+                RaisePropertyChanged(() => IsSelectedTaskFinished);
             }
         }
 
@@ -310,7 +310,7 @@ namespace WhatHaveIDone.Core.ViewModels
         {
             RunningTask.End = DateTime.UtcNow;
             IsTaskPaused = true;
-            RaisePropertyChanged(() => CanMoveTaskEnd);
+            RaisePropertyChanged(() => IsSelectedTaskFinished);
             UpdateTaskStatistics();
         }
 
