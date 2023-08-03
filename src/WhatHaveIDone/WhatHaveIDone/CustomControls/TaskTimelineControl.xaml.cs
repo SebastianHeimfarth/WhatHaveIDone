@@ -224,7 +224,9 @@ namespace WhatHaveIDone.CustomControls
                 _parent = parent;
             }
 
+#pragma warning disable CS0067 // The event 'TaskTimelineControl.TaskClickedCommand.CanExecuteChanged' is never used
             public event EventHandler CanExecuteChanged;
+#pragma warning restore CS0067 // The event 'TaskTimelineControl.TaskClickedCommand.CanExecuteChanged' is never used
 
             public bool CanExecute(object parameter)
             {

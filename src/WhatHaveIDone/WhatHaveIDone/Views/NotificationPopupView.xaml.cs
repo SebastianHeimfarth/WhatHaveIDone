@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MvvmCross.Platforms.Wpf.Presenters.Attributes;
+using MvvmCross.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -18,6 +20,8 @@ namespace WhatHaveIDone.Views
     /// <summary>
     /// Interaction logic for NotificationPopup.xaml
     /// </summary>
+    [MvxContentPresentation]
+    [MvxViewFor(typeof(NotificationViewModel))]
     public partial class NotificationPopupView : Popup
     {
         public NotificationPopupView()

@@ -1,4 +1,6 @@
-﻿using MvvmCross.Platforms.Wpf.Views;
+﻿using MvvmCross.Platforms.Wpf.Presenters.Attributes;
+using MvvmCross.Platforms.Wpf.Views;
+using MvvmCross.ViewModels;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -6,14 +8,12 @@ using WhatHaveIDone.Core.ViewModels;
 
 namespace WhatHaveIDone.Views
 {
-    public interface ICleanupOnClose
-    {
-        void OnBeforeClosed();
-    }
 
     /// <summary>
     /// Interaction logic for TaskListView.xaml
     /// </summary>
+    [MvxContentPresentation]
+    [MvxViewFor(typeof(TaskDayEditorViewModel))]
     public partial class TaskDayEditorView : MvxWpfView, ICleanupOnClose
     {
         public TaskDayEditorView()
