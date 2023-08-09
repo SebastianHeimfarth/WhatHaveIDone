@@ -6,10 +6,10 @@ namespace WhatHaveIDone.Core.ViewModels
 {
     public class TaskStatisticViewModel : MvxViewModel
     {
-        private TaskCategory _category;
+        private TaskType _category;
         private TimeSpan _timeSpan;
 
-        public TaskCategory Category
+        public TaskType Category
         {
             get => _category;
             set

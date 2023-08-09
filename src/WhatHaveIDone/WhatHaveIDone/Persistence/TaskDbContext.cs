@@ -17,11 +17,23 @@ namespace WhatHaveIDone.Persistence
         }
 
         public virtual DbSet<TaskModel> Tasks { get; set; }
-        public virtual DbSet<TaskCategory> TaskCategories { get; set; }
+        public virtual DbSet<TaskType> TaskTypes { get; set; }
+        public virtual DbSet<TaskProperty> TaskProperties { get; set; }
 
-        public async Task<TaskModel> CreateTaskAsync(string taskName, TaskCategory category, string comment, DateTime begin)
+        public Task<bool> TaskTypeExists(int id)
         {
-            var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin, Category = category };
+            return TaskTypes.AnyAsync(x => x.Id == id);
+        }
+
+        public async Task AddTaskType(TaskType taskType)
+        {
+            await TaskTypes.AddAsync(taskType);
+            await SaveChangesAsync();
+        }
+
+        public async Task<TaskModel> CreateTaskAsync(string taskName, TaskType type, string comment, DateTime begin)
+        {
+            var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin, TaskType = type };
 
             await Tasks.AddAsync(task);
             await SaveChangesAsync();
@@ -41,9 +53,9 @@ namespace WhatHaveIDone.Persistence
             return false;
         }
 
-        public Task<IReadOnlyList<TaskCategory>> GetAllTaskCategories()
+        public Task<IReadOnlyList<TaskType>> GetAllTypes()
         {
-            return TaskCategories.ToListAsync().ContinueWith(x => (IReadOnlyList<TaskCategory>)x.Result);
+            return TaskTypes.ToListAsync().ContinueWith(x => (IReadOnlyList<TaskType>)x.Result);
         }
 
         public Task<TaskModel> GetTaskByIdAsync(Guid id)
@@ -73,17 +85,16 @@ namespace WhatHaveIDone.Persistence
 
             var colorToIntegerConverter = new ColorToIntegerConverter();
 
-            modelBuilder.Entity<TaskCategory>(entity =>
+            modelBuilder.Entity<TaskType>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(x => x.Color)
                     .HasConversion(colorToIntegerConverter);
+            });
 
-                entity.HasData(
-                    new TaskCategory { Name = "Work", Color = Color.Beige, Id = Guid.Parse("31F59466-711A-46FE-B3F9-D6DB633440B1") },
-                    new TaskCategory { Name = "Meeting", Color = Color.FromArgb(19, 173, 158), Id = Guid.Parse("44435569-C463-40AF-8F78-34CDBE035D8D") },
-                    new TaskCategory { Name = "Pause", Color = Color.FromArgb(55, 173, 19), Id = Guid.Parse("D57D7417-C7F2-4872-A0D6-1D68C9BDC13A") }
-                );
+            modelBuilder.Entity<TaskProperty>(entity =>
+            {
+                entity.HasKey(e => e.Id);
             });
         }
 

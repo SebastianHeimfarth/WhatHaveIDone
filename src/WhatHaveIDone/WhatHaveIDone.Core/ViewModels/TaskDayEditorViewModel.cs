@@ -16,7 +16,7 @@ namespace WhatHaveIDone.Core.ViewModels
     public class TaskDayEditorViewModel : MvxViewModel<DateTime>
     {
         private const int TaskMovingAmountInMinutes = 5;
-        private readonly ObservableCollection<TaskCategory> _categories = new ObservableCollection<TaskCategory>();
+        private readonly ObservableCollection<TaskType> _taskTypes = new ObservableCollection<TaskType>();
         private readonly ITaskDbContext _taskDbContext;
         private readonly IMvxNavigationService _navigationService;
         private readonly IMessageBoxService _messageBoxService;
@@ -194,14 +194,14 @@ namespace WhatHaveIDone.Core.ViewModels
             get { return _tasks; }
         }
 
-        public ObservableCollection<TaskCategory> Categories => _categories;
+        public ObservableCollection<TaskType> Categories => _taskTypes;
 
-        private TaskCategory _categoryForNewTask;
+        private TaskType _typeForNewTask;
 
-        public TaskCategory CategoryForNewTask
+        public TaskType TaskTypeForNewTask
         {
-            get { return _categoryForNewTask; }
-            set { SetProperty(ref _categoryForNewTask, value); }
+            get { return _typeForNewTask; }
+            set { SetProperty(ref _typeForNewTask, value); }
         }
 
         public IReadOnlyList<TaskStatisticViewModel> TaskStatistics
@@ -236,12 +236,13 @@ namespace WhatHaveIDone.Core.ViewModels
 
         public async Task Load()
         {
-            var taskCategories = await _taskDbContext.GetAllTaskCategories();
+            var taskCategories = await _taskDbContext.GetAllTypes();
             foreach (var category in taskCategories)
             {
-                _categories.Add(category);
+                _taskTypes.Add(category);
             }
-            CategoryForNewTask = taskCategories.Single(x => x.Name == "Work");
+
+            TaskTypeForNewTask = taskCategories.Count > 0 ? taskCategories[0] : null;
 
             var tasksForThisWeek = await _taskDbContext.GetTasksInIntervalAsync(DayInLocalTime.Date.ToUniversalTime(), DayInLocalTime.Date.AddDays(1).ToUniversalTime());
 
@@ -267,7 +268,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
         public async Task StartTask()
         {
-            var task = await _taskDbContext.CreateTaskAsync(TaskName, CategoryForNewTask, Comment, DateTime.UtcNow);
+            var task = await _taskDbContext.CreateTaskAsync(TaskName, TaskTypeForNewTask, Comment, DateTime.UtcNow);
 
             CurrentTask = MapTaskToViewModel(task);
             Tasks.Add(CurrentTask);
@@ -306,7 +307,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private async Task<TaskViewModel> CreateContinuationTask()
         {
-            var taskModel = await _taskDbContext.CreateTaskAsync(CurrentTask.Name, CurrentTask.Category, CurrentTask.Comment, DateTime.UtcNow);
+            var taskModel = await _taskDbContext.CreateTaskAsync(CurrentTask.Name, CurrentTask.TaskType, CurrentTask.Comment, DateTime.UtcNow);
 
             return MapTaskToViewModel(taskModel);
         }
@@ -320,7 +321,7 @@ namespace WhatHaveIDone.Core.ViewModels
         {
             TaskStatistics = Tasks.
                             Where(x => x.End.HasValue).
-                            GroupBy(x => x.Category).
+                            GroupBy(x => x.TaskType).
                             Select(x => new TaskStatisticViewModel
                             {
                                 Category = x.Key,

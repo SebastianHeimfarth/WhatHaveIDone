@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MvvmCross;
 using MvvmCross.IoC;
+using System.Linq;
 using WhatHaveIDone.Core;
+using WhatHaveIDone.Core.Configuration;
 using WhatHaveIDone.Core.CoreAbstractions;
 using WhatHaveIDone.Core.Persistence;
 using WhatHaveIDone.Core.ViewModels;
@@ -18,12 +20,14 @@ namespace WhatHaveIDone
         {
             MvxIoCProvider.Initialize();
 
+            var relevantAssemblies = new[] { typeof(IoCConfiguration).Assembly, typeof(TaskViewModel).Assembly };
+            var creatableTypes = relevantAssemblies.SelectMany(x=>x.GetTypes()).Where(x => !x.IsGenericType && !x.IsAbstract && !x.IsInterface);
+            creatableTypes.AsInterfaces().RegisterAsDynamic();
+
             Mvx.IoCProvider.RegisterSingleton<ITaskDbContext>(() => CreateDataContext());
-            Mvx.IoCProvider.RegisterType<IMessageBoxService, MessageBoxService>();
-            Mvx.IoCProvider.RegisterType<IDispatcherTimer, DispatcherTimerWrapper>();
             Mvx.IoCProvider.RegisterType<NotificationPopupView, NotificationPopupView>();
             Mvx.IoCProvider.RegisterType<NotificationViewModel, NotificationViewModel>();
-
+            
             var notificationViewModel = Mvx.IoCProvider.Resolve<NotificationViewModel>();
             var notificationView = Mvx.IoCProvider.Resolve<NotificationPopupView>();
             notificationView.DataContext = notificationViewModel;

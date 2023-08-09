@@ -9,9 +9,18 @@ namespace WhatHaveIDone.Core
 {
     public class AppStart : MvxAppStart
     {
+        private readonly ITaskSetup _taskSetup;
+
         public AppStart(IMvxApplication app,
-                IMvxNavigationService navigationService) : base(app, navigationService)
+                IMvxNavigationService navigationService, ITaskSetup taskSetup) : base(app, navigationService)
         {
+            _taskSetup = taskSetup;
+        }
+
+        protected override async Task<object> ApplicationStartup(object hint = null)
+        {
+            await _taskSetup.AddTaskTypesToDatabase();
+            return await base.ApplicationStartup(hint);
         }
 
         protected override Task NavigateToFirstViewModel(object hint = null)

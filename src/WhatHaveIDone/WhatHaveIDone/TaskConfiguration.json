@@ -1,0 +1,64 @@
+﻿{
+  "TaskTypes": [
+    {
+      "Id": 1,
+      "Color": "5acc1d",
+      "Name": "Development",
+      "DefaultProperties": [
+        {
+          "Name": "Cost Center",
+          "Value": "123"
+        },
+        {
+          "Name": "Effort",
+          "Value": "1"
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "Color": "1374a1",
+      "Name": "Meeting",
+      "DefaultProperties": [
+        {
+          "Name": "Cost Center",
+          "Value": "456"
+        },
+        {
+          "Name": "Effort",
+          "Value": "1"
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "Color": "0000ff",
+      "Name": "Research",
+      "DefaultProperties": [
+        {
+          "Name": "Cost Center",
+          "Value": "789"
+        },
+        {
+          "Name": "Effort",
+          "Value": "1"
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "Color": "00ffff",
+      "Name": "Documentation",
+      "DefaultProperties": [
+        {
+          "Name": "Cost Center",
+          "Value": "999"
+        },
+        {
+          "Name": "Effort",
+          "Value": "1"
+        }
+      ]
+    }
+  ]
+}

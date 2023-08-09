@@ -14,8 +14,8 @@ namespace WhatHaveIDone.UITest.TestCases
         private static readonly DateTime _startUtc = new DateTime(2021, 1, 1, 23, 0, 0, DateTimeKind.Utc);
         private static readonly DateTime _endUtc = new DateTime(2021, 1, 2, 23, 0, 0, DateTimeKind.Utc);
 
-        private static readonly TaskCategory _greenCategory = new TaskCategory { Color = System.Drawing.Color.Green, Name = "Green" };
-        private static readonly TaskCategory _redCategory = new TaskCategory { Color = System.Drawing.Color.Red, Name = "Red" };
+        private static readonly TaskType _greenCategory = new TaskType { Color = System.Drawing.Color.Green, Name = "Green" };
+        private static readonly TaskType _redCategory = new TaskType { Color = System.Drawing.Color.Red, Name = "Red" };
 
         public IEnumerable<ITestCase> GetAllTestCases()
         {
@@ -37,7 +37,7 @@ namespace WhatHaveIDone.UITest.TestCases
                     new TaskViewModel
                     {
                         Begin = _startUtc.AddHours(1),
-                        Category = _greenCategory
+                        TaskType = _greenCategory
                     }
                 }
             };
@@ -53,7 +53,7 @@ namespace WhatHaveIDone.UITest.TestCases
                     {
                         Begin = _startUtc.AddHours(1),
                         End = _startUtc.AddHours(3),
-                        Category = _greenCategory
+                        TaskType = _greenCategory
                     }
                 }
             };
@@ -69,14 +69,14 @@ namespace WhatHaveIDone.UITest.TestCases
                     {
                         Begin = _startUtc.AddHours(1),
                         End = _startUtc.AddHours(3),
-                        Category = _greenCategory
+                        TaskType = _greenCategory
                     },
 
                     new TaskViewModel
                     {
                         Begin = _startUtc.AddHours(5),
                         End = _startUtc.AddHours(8),
-                        Category = _redCategory
+                        TaskType = _redCategory
                     }
                 }
             };

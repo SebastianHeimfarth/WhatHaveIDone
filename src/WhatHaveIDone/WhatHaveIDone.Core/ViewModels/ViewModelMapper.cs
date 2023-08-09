@@ -1,4 +1,5 @@
-﻿using WhatHaveIDone.Core.Models;
+﻿using System.Linq;
+using WhatHaveIDone.Core.Models;
 
 namespace WhatHaveIDone.Core.ViewModels
 {
@@ -13,7 +14,18 @@ namespace WhatHaveIDone.Core.ViewModels
                 Id = task.Id,
                 Comment = task.Comment,
                 Name = task.Name,
-                Category = task.Category
+                TaskType = task.TaskType,
+                DynamicPropertyValues = task.DynamicPropertyValues.Select(x => MapTaskPropertyToViewModel(x)).ToArray()
+            };
+        }
+
+        public static TaskPropertyViewModel MapTaskPropertyToViewModel(TaskProperty taskProperty)
+        {
+            return new TaskPropertyViewModel
+            {
+                Id = taskProperty.Id,
+                Name = taskProperty.Name,
+                Value = taskProperty.Value
             };
         }
 
@@ -21,9 +33,15 @@ namespace WhatHaveIDone.Core.ViewModels
         {
             task.Begin = viewModel.Begin;
             task.Comment = viewModel.Comment;
-            task.Category = viewModel.Category;
+            task.TaskType = viewModel.TaskType;
             task.End = viewModel.End;
             task.Name = viewModel.Name;
+
+            foreach(var item in viewModel.DynamicPropertyValues) 
+            {                 
+                var taskProperty = task.DynamicPropertyValues.Single(x => x.Id == item.Id);
+                taskProperty.Value = item.Value;
+            }
         }
     }
 }

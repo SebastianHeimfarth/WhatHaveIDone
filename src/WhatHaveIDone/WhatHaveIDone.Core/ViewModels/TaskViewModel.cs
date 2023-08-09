@@ -1,5 +1,6 @@
 ﻿using MvvmCross.ViewModels;
 using System;
+using System.Collections.Generic;
 using WhatHaveIDone.Core.Models;
 
 namespace WhatHaveIDone.Core.ViewModels
@@ -7,7 +8,7 @@ namespace WhatHaveIDone.Core.ViewModels
     public class TaskViewModel : MvxViewModel
     {
         private string _name;
-        private TaskCategory _category;
+        private TaskType _taskType;
         private string _comment;
         private DateTime _begin;
         private DateTime _temporaryEnd = DateTime.UtcNow;
@@ -23,12 +24,12 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
-        public TaskCategory Category
+        public TaskType TaskType
         {
-            get => _category;
+            get => _taskType;
             set
             {
-                SetProperty(ref _category, value);
+                SetProperty(ref _taskType, value);
             }
         }
 
@@ -76,5 +77,7 @@ namespace WhatHaveIDone.Core.ViewModels
                 SetProperty(ref _end, value);
             }
         }
+
+        public TaskPropertyViewModel[] DynamicPropertyValues { get; internal set; }
     }
 }

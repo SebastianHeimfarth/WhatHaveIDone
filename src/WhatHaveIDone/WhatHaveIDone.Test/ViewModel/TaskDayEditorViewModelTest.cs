@@ -17,7 +17,7 @@ namespace WhatHaveIDone.Test.ViewModel
     {
         private const string TaskName = "TaskName";
         private readonly DateTime _dayInLocalTime = new DateTime(2021, 1, 1);
-        private readonly Core.Models.TaskCategory _defaultCategory = new Core.Models.TaskCategory();
+        private readonly Core.Models.TaskType _defaultCategory = new Core.Models.TaskType();
 
         private TaskDbContext DataContext { get; set; }
 
@@ -26,13 +26,13 @@ namespace WhatHaveIDone.Test.ViewModel
         {
             //arrange
             var sut = await CreateTaskListViewModel();
-            var category1 = new Core.Models.TaskCategory();
-            var category2 = new Core.Models.TaskCategory();
+            var category1 = new Core.Models.TaskType();
+            var category2 = new Core.Models.TaskType();
 
             //act
-            sut.Tasks.Add(new TaskViewModel() { Category = category1, Name = "t1", Begin = _dayInLocalTime, End = _dayInLocalTime.AddHours(1) });
-            sut.Tasks.Add(new TaskViewModel() { Category = category1, Name = "t2", Begin = _dayInLocalTime, End = _dayInLocalTime.AddHours(2) });
-            sut.Tasks.Add(new TaskViewModel() { Category = category2, Name = "t3", Begin = _dayInLocalTime, End = _dayInLocalTime.AddHours(4) });
+            sut.Tasks.Add(new TaskViewModel() { TaskType = category1, Name = "t1", Begin = _dayInLocalTime, End = _dayInLocalTime.AddHours(1) });
+            sut.Tasks.Add(new TaskViewModel() { TaskType = category1, Name = "t2", Begin = _dayInLocalTime, End = _dayInLocalTime.AddHours(2) });
+            sut.Tasks.Add(new TaskViewModel() { TaskType = category2, Name = "t3", Begin = _dayInLocalTime, End = _dayInLocalTime.AddHours(4) });
 
             //assert
             sut.TaskStatistics.ShouldNotBeNull();
