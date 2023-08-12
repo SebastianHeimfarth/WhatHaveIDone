@@ -13,27 +13,25 @@ namespace WhatHaveIDone.Core.Models
         [Key]
         public Guid Id { get; set; }
 
-        //public int TaskTypeId { get; set; }
-
         [Required]
         public string Name { get; set; }
 
         public string Comment { get; set; }
-        public TaskType TaskType
+        public virtual TaskType TaskType
         {
             get => _taskType;
             set
             {
                 if (value != null && value != _taskType && value.DefaultProperties != null)
                 {
-                    DynamicPropertyValues = value.DefaultProperties.
-                        Select(x => x.Clone()).ToList();
+                    Properties = value.DefaultProperties.
+                        Select(x => x.CreateProperty()).ToList();
                 }
                 _taskType = value;
             }
         }
 
-        public List<TaskProperty> DynamicPropertyValues { get; set; } = new();
+        public virtual List<TaskProperty> Properties { get; set; } = new();
         public DateTime Begin { get; set; }
         public DateTime? End { get; set; }
     }

@@ -180,7 +180,7 @@ namespace WhatHaveIDone.Test.ViewModel
 
         private async Task<TaskDayEditorViewModel> CreateTaskListViewModel()
         {
-            DataContext = DataContextFixture.CreateTaskDbContext();
+            DataContext = DataContextFixture.CreateInMemoryDb();
             var viewModel = new TaskDayEditorViewModel(DataContext, Substitute.For<IMvxNavigationService>(), Substitute.For<IMessageBoxService>(), Substitute.For<IDispatcherTimer>());
             await viewModel.ChangeDay(_dayInLocalTime);
 

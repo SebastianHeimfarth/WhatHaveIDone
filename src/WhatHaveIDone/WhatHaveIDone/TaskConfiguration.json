@@ -7,11 +7,11 @@
       "DefaultProperties": [
         {
           "Name": "Cost Center",
-          "Value": "123"
+          "DefaultValue": "123"
         },
         {
           "Name": "Effort",
-          "Value": "1"
+          "DefaultValue": "1"
         }
       ]
     },
@@ -22,11 +22,11 @@
       "DefaultProperties": [
         {
           "Name": "Cost Center",
-          "Value": "456"
+          "DefaultValue": "456"
         },
         {
           "Name": "Effort",
-          "Value": "1"
+          "DefaultValue": "1"
         }
       ]
     },
@@ -37,11 +37,11 @@
       "DefaultProperties": [
         {
           "Name": "Cost Center",
-          "Value": "789"
+          "DefaultValue": "789"
         },
         {
           "Name": "Effort",
-          "Value": "1"
+          "DefaultValue": "1"
         }
       ]
     },
@@ -52,11 +52,11 @@
       "DefaultProperties": [
         {
           "Name": "Cost Center",
-          "Value": "999"
+          "DefaultValue": "999"
         },
         {
           "Name": "Effort",
-          "Value": "1"
+          "DefaultValue": "1"
         }
       ]
     }

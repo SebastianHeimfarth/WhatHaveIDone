@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System;
+using System.Runtime.Serialization;
 
 namespace WhatHaveIDone.Core.Models
 {
@@ -8,9 +9,8 @@ namespace WhatHaveIDone.Core.Models
         [Key]
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
+        public string Name => TaskPropertyType?.Name;
         public string Value { get; set; }
-
-        public TaskProperty Clone() => new TaskProperty { Name = Name, Value = Value, Id = Guid.NewGuid() };
+        public virtual TaskPropertyType TaskPropertyType { get; set; }
     }
 }

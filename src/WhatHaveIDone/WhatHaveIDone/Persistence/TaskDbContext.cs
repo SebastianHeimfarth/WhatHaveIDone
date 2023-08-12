@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using WhatHaveIDone.Core.Models;
 using WhatHaveIDone.Core.Persistence;
 
@@ -17,8 +18,12 @@ namespace WhatHaveIDone.Persistence
         }
 
         public virtual DbSet<TaskModel> Tasks { get; set; }
-        public virtual DbSet<TaskType> TaskTypes { get; set; }
+
         public virtual DbSet<TaskProperty> TaskProperties { get; set; }
+
+        public virtual DbSet<TaskType> TaskTypes { get; set; }
+        
+        public virtual DbSet<TaskPropertyType> TaskPropertyTypes { get; set; }
 
         public Task<bool> TaskTypeExists(int id)
         {
@@ -34,7 +39,6 @@ namespace WhatHaveIDone.Persistence
         public async Task<TaskModel> CreateTaskAsync(string taskName, TaskType type, string comment, DateTime begin)
         {
             var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin, TaskType = type };
-
             await Tasks.AddAsync(task);
             await SaveChangesAsync();
             return task;
@@ -70,6 +74,8 @@ namespace WhatHaveIDone.Persistence
                      &&
                      (!x.End.HasValue ||
                         x.End.HasValue && x.End.Value > start)).
+                        Include(x => x.TaskType).
+                        Include(x => x.Properties).
                 ToListAsync().
                 ContinueWith(x => (IReadOnlyList<TaskModel>)x.Result);
         }
@@ -81,7 +87,11 @@ namespace WhatHaveIDone.Persistence
                 entity.HasKey(e => e.Id);
                 entity.Property(x => x.Begin).HasConversion(new DateTimeToUtcDateTimeConverter());
                 entity.Property(x => x.End).HasConversion(new DateTimeToUtcDateTimeConverter());
-                entity.HasMany(x => x.DynamicPropertyValues).WithOne().OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(x => x.Properties).WithOne().OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(x => x.TaskType).WithMany().OnDelete(DeleteBehavior.NoAction);
+
+                entity.Navigation(x=>x.Properties).AutoInclude();
+                entity.Navigation(x=>x.TaskType).AutoInclude();
             });
 
             var colorToIntegerConverter = new ColorToIntegerConverter();
@@ -91,11 +101,19 @@ namespace WhatHaveIDone.Persistence
                 entity.HasKey(e => e.Id);
                 entity.Property(x => x.Color)
                     .HasConversion(colorToIntegerConverter);
+
+                
+                entity.HasMany(x => x.DefaultProperties).WithOne().OnDelete(DeleteBehavior.Cascade);
+
+                entity.Navigation(x=>x.DefaultProperties).AutoInclude();
             });
 
             modelBuilder.Entity<TaskProperty>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.Property(x => x.Value);
+                entity.HasOne(x => x.TaskPropertyType).WithMany().OnDelete(DeleteBehavior.NoAction);
+                entity.Navigation(x=>x.TaskPropertyType).AutoInclude();
             });
         }
 

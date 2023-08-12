@@ -16,6 +16,6 @@ namespace WhatHaveIDone.Core.Models
 
         public string Name { get; set; }
 
-        public List<TaskProperty> DefaultProperties { get; set; }
+        public virtual List<TaskPropertyType> DefaultProperties { get; set; }
     }
 }

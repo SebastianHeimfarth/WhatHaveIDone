@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using WhatHaveIDone.Core.Models;
 
 namespace WhatHaveIDone.Core.ViewModels
@@ -15,7 +16,7 @@ namespace WhatHaveIDone.Core.ViewModels
                 Comment = task.Comment,
                 Name = task.Name,
                 TaskType = task.TaskType,
-                DynamicPropertyValues = task.DynamicPropertyValues.Select(x => MapTaskPropertyToViewModel(x)).ToArray()
+                DynamicPropertyValues = new ObservableCollection<TaskPropertyViewModel>(task.Properties.Select(x => MapTaskPropertyToViewModel(x)))
             };
         }
 
@@ -39,7 +40,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
             foreach(var item in viewModel.DynamicPropertyValues) 
             {                 
-                var taskProperty = task.DynamicPropertyValues.Single(x => x.Id == item.Id);
+                var taskProperty = task.Properties.Single(x => x.Id == item.Id);
                 taskProperty.Value = item.Value;
             }
         }

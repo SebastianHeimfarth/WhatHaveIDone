@@ -1,6 +1,7 @@
 ﻿using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using WhatHaveIDone.Core.Models;
 
 namespace WhatHaveIDone.Core.ViewModels
@@ -14,6 +15,7 @@ namespace WhatHaveIDone.Core.ViewModels
         private DateTime _temporaryEnd = DateTime.UtcNow;
         private DateTime? _end;
         private Guid _id;
+        private ObservableCollection<TaskPropertyViewModel>  _dynamicPropertyValues;
 
         public Guid Id
         {
@@ -78,6 +80,13 @@ namespace WhatHaveIDone.Core.ViewModels
             }
         }
 
-        public TaskPropertyViewModel[] DynamicPropertyValues { get; internal set; }
+        public ObservableCollection<TaskPropertyViewModel> DynamicPropertyValues
+        {
+            get=> _dynamicPropertyValues;
+            set
+            {
+                SetProperty(ref _dynamicPropertyValues, value);
+            }
+        }
     }
 }

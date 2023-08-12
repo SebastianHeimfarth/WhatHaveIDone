@@ -4,12 +4,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:WhatHaveIDone.Core.ViewModels;assembly=WhatHaveIDone.Core"
     xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
     xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
     xmlns:converter="clr-namespace:WhatHaveIDone.Converter" 
     xmlns:customcontrols="clr-namespace:WhatHaveIDone.CustomControls"
     mc:Ignorable="d"
     x:Name="_taskDayEditor"
+    d:DataContext="{d:DesignInstance vm:TaskDayEditorViewModel, IsDesignTimeCreatable=False}"
     d:DesignHeight="450" d:DesignWidth="800">
     <views:MvxWpfView.Resources>
         <ResourceDictionary>
@@ -149,7 +151,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="1">
-                    <TextBlock Text="Category" Style="{StaticResource TextBoxLabelStyle}"/>
+                    <TextBlock Text="Type" Style="{StaticResource TextBoxLabelStyle}"/>
                     <ComboBox x:Name="CategoryComboBox"  Style="{StaticResource ComboBoxStyle}" DisplayMemberPath="Name" SelectedItem="{Binding TaskTypeForNewTask}" ItemsSource="{Binding Categories, Mode=OneWay}" HorizontalAlignment="Left" Width="150"  />
                 </StackPanel>
 
@@ -161,12 +163,13 @@
                 <Button Grid.Row="3" Grid.Column="2" mvx:Bi.nd="Command StartTaskCommand"  IsEnabled="{Binding CanStartTask}" HorizontalAlignment="Right" ToolTip="Start a new Task">Start</Button>
             </Grid>
 
-            
+
             <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="{StaticResource HighlightedBackgroundColor}" Visibility="{Binding SelectedTask, Converter={StaticResource NotNullToVisibilityConveter}}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -174,22 +177,33 @@
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="2">
-                    <Run Text="Edit Task" FontStyle="Normal"/>
-                    <Run Text="{Binding Path=SelectedTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
-                </TextBlock>
-
-                <StackPanel Grid.Row="1" Grid.Column="0">
+                
+                
+                <!--Name-->
+                <StackPanel Grid.Row="0" Grid.Column="0">
                     <TextBlock Text="Name" Style="{StaticResource TextBoxLabelStyle}"/>
                     <TextBox x:Name="TaskNameEditTextBox"  Style="{StaticResource TextInputStyle}" HorizontalAlignment="Stretch"  Text="{Binding Path=SelectedTask.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
                 </StackPanel>
 
-                <StackPanel Grid.Row="1" Grid.Column="1">
-                    <TextBlock Text="Category" Style="{StaticResource TextBoxLabelStyle}"/>
+                <!--Type-->
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="Type" Style="{StaticResource TextBoxLabelStyle}"/>
                     <ComboBox x:Name="CategoryEditComboBox"  Style="{StaticResource ComboBoxStyle}" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedTask.TaskType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Categories, Mode=OneWay}" HorizontalAlignment="Left" Width="100"  />
                 </StackPanel>
+                
+                <!--Properties-->
+                <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="2">
+                    <TextBlock Text="Properties" Style="{StaticResource TextBoxLabelStyle}"/>
+                    <DataGrid x:Name="_properties" MinHeight="300px" ItemsSource="{Binding SelectedTask.DynamicPropertyValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="False" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
 
-                <Grid Grid.Row="0" Grid.RowSpan="3" Grid.Column="2" HorizontalAlignment="Left"  Margin="10">
+                <!--Start/End-->
+                <Grid Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" HorizontalAlignment="Left"  Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="55"/>
                         <RowDefinition Height="55"/>
@@ -214,11 +228,13 @@
                     <Button Content="&#9659;" Grid.Row="1" Grid.Column="2" mvx:Bi.nd="Command MoveTaskEndRightCommand"  Width="40" Visibility="{Binding CanMoveTaskEnd, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Move Task End"/>
                 </Grid>
 
+                <!--Delete-->
                 <Button Content="&#128465;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command DeleteTaskCommand" HorizontalAlignment="Right" Width="40" ToolTip="Delete Task"/>
 
-                <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
+                <!--Comment-->
+                <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Vertical">
                     <TextBlock Text="Comment" Style="{StaticResource TextBoxLabelStyle}"/>
-                    <TextBox Text="{Binding SelectedTask.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextInputStyle}" TextWrapping="Wrap" AcceptsReturn="True" Height="40"  />
+                    <TextBox Text="{Binding SelectedTask.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextInputStyle}" TextWrapping="Wrap" AcceptsReturn="True" />
                 </StackPanel>
                 
 
