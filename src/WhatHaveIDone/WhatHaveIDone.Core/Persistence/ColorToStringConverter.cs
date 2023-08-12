@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Drawing;
 
-namespace WhatHaveIDone.Persistence
+namespace WhatHaveIDone.Core.Persistence
 {
     public class ColorToIntegerConverter : ValueConverter<Color, int>
     {

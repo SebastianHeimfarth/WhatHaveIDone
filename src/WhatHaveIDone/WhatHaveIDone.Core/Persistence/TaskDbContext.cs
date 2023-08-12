@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using WhatHaveIDone.Core.Models;
-using WhatHaveIDone.Core.Persistence;
 
-namespace WhatHaveIDone.Persistence
+namespace WhatHaveIDone.Core.Persistence
 {
     public class TaskDbContext : DbContext, ITaskDbContext
     {
@@ -22,7 +20,7 @@ namespace WhatHaveIDone.Persistence
         public virtual DbSet<TaskProperty> TaskProperties { get; set; }
 
         public virtual DbSet<TaskType> TaskTypes { get; set; }
-        
+
         public virtual DbSet<TaskPropertyType> TaskPropertyTypes { get; set; }
 
         public Task<bool> TaskTypeExists(int id)
@@ -90,8 +88,8 @@ namespace WhatHaveIDone.Persistence
                 entity.HasMany(x => x.Properties).WithOne().OnDelete(DeleteBehavior.Cascade);
                 entity.HasOne(x => x.TaskType).WithMany().OnDelete(DeleteBehavior.NoAction);
 
-                entity.Navigation(x=>x.Properties).AutoInclude();
-                entity.Navigation(x=>x.TaskType).AutoInclude();
+                entity.Navigation(x => x.Properties).AutoInclude();
+                entity.Navigation(x => x.TaskType).AutoInclude();
             });
 
             var colorToIntegerConverter = new ColorToIntegerConverter();
@@ -102,10 +100,10 @@ namespace WhatHaveIDone.Persistence
                 entity.Property(x => x.Color)
                     .HasConversion(colorToIntegerConverter);
 
-                
+
                 entity.HasMany(x => x.DefaultProperties).WithOne().OnDelete(DeleteBehavior.Cascade);
 
-                entity.Navigation(x=>x.DefaultProperties).AutoInclude();
+                entity.Navigation(x => x.DefaultProperties).AutoInclude();
             });
 
             modelBuilder.Entity<TaskProperty>(entity =>
@@ -113,7 +111,7 @@ namespace WhatHaveIDone.Persistence
                 entity.HasKey(e => e.Id);
                 entity.Property(x => x.Value);
                 entity.HasOne(x => x.TaskPropertyType).WithMany().OnDelete(DeleteBehavior.NoAction);
-                entity.Navigation(x=>x.TaskPropertyType).AutoInclude();
+                entity.Navigation(x => x.TaskPropertyType).AutoInclude();
             });
         }
 

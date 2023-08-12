@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 
-namespace WhatHaveIDone.Persistence
+namespace WhatHaveIDone.Core.Persistence
 {
     public class DateTimeToUtcDateTimeConverter : ValueConverter<DateTime, DateTime>
     {
