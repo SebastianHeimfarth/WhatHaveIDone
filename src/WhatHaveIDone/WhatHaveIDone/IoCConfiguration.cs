@@ -26,6 +26,7 @@ namespace WhatHaveIDone
             Mvx.IoCProvider.RegisterSingleton<ITaskDbContext>(() => CreateDataContext());
             Mvx.IoCProvider.RegisterType<NotificationPopupView, NotificationPopupView>();
             Mvx.IoCProvider.RegisterType<NotificationViewModel, NotificationViewModel>();
+            Mvx.IoCProvider.RegisterSingleton(()=> Mvx.IoCProvider.Resolve<IConfigurationProvider>().LoadGeneralSettings());
             
             var notificationViewModel = Mvx.IoCProvider.Resolve<NotificationViewModel>();
             var notificationView = Mvx.IoCProvider.Resolve<NotificationPopupView>();

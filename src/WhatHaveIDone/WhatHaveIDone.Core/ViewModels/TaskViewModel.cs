@@ -32,13 +32,12 @@ namespace WhatHaveIDone.Core.ViewModels
             get => _taskType;
             set
             {
-                if (_taskType != value)
+                if (SetProperty(ref _taskType, value))
                 {
                     DynamicPropertyValues = new ObservableCollection<TaskPropertyViewModel>(
                         value.DefaultProperties.Select(x=> 
                         ViewModelMapper.CreateTaskPropertyViewModel(x)));
                 }
-                SetProperty(ref _taskType, value);
             }
         }
 

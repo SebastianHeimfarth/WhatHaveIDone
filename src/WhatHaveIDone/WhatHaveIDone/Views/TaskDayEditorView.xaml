@@ -263,8 +263,8 @@
             <ScrollViewer Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" CanContentScroll="True">
                 <customcontrols:TaskTimelineControl x:Name="_taskTimelineControl"
                     Tasks="{Binding DataContext.Tasks, ElementName=_taskDayEditor}" 
-                    TimeLineStart="{Binding DataContext.DayUtc, ElementName=_taskDayEditor}" 
-                    TimeLineEnd="{Binding DataContext.EndUtc, ElementName=_taskDayEditor}" 
+                    TimeLineStart="{Binding DataContext.DayStart, ElementName=_taskDayEditor}" 
+                    TimeLineEnd="{Binding DataContext.DayEnd, ElementName=_taskDayEditor}" 
                     SelectedTask="{Binding DataContext.SelectedTask, Mode=TwoWay, ElementName=_taskDayEditor}"
                     Margin="10"
                     Width="1400"

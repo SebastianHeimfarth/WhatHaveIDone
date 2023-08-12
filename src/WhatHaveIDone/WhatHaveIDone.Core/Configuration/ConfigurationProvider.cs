@@ -12,6 +12,12 @@ namespace WhatHaveIDone.Core.Configuration
             _jsonSerializer = jsonSerializer;
         }
 
+        public GeneralSettings LoadGeneralSettings()
+        {
+            using var reader = new StreamReader("GeneralSettings.json");
+            return _jsonSerializer.DeserializeGeneralSettings(reader);
+        }
+
         public TaskConfiguration LoadTaskConfiguration()
         {
             using var reader = new StreamReader("TaskConfiguration.json");

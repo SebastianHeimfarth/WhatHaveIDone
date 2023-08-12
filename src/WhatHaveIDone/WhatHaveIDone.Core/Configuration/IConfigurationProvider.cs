@@ -5,5 +5,6 @@ namespace WhatHaveIDone.Core.Configuration
     public interface IConfigurationProvider
     {
         TaskConfiguration LoadTaskConfiguration();
+        GeneralSettings LoadGeneralSettings();
     }
 }

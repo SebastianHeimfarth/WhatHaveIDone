@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using WhatHaveIDone.Core.Configuration;
 using WhatHaveIDone.Core.CoreAbstractions;
 using WhatHaveIDone.Core.Models;
 using WhatHaveIDone.Core.Persistence;
@@ -20,6 +21,7 @@ namespace WhatHaveIDone.Core.ViewModels
         private readonly ITaskDbContext _taskDbContext;
         private readonly IMvxNavigationService _navigationService;
         private readonly IMessageBoxService _messageBoxService;
+        private readonly GeneralSettings _generalSettings;
         private readonly ObservableCollection<TaskViewModel> _tasks = new ObservableCollection<TaskViewModel>();
         private string _comment;
 
@@ -35,7 +37,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
         private IReadOnlyList<TaskStatisticViewModel> _taskStatistics;
 
-        public TaskDayEditorViewModel(ITaskDbContext taskDbContext, IMvxNavigationService navigationService, IMessageBoxService messageBoxService, IDispatcherTimer dispatcherTimer)
+        public TaskDayEditorViewModel(ITaskDbContext taskDbContext, IMvxNavigationService navigationService, IMessageBoxService messageBoxService, IDispatcherTimer dispatcherTimer, GeneralSettings generalSettings)
         {
             StartTaskCommand = new MvxAsyncCommand(StartTask);
             StopTaskCommand = new MvxCommand(StopTask);
@@ -54,6 +56,8 @@ namespace WhatHaveIDone.Core.ViewModels
             _taskDbContext = taskDbContext;
             _navigationService = navigationService;
             _messageBoxService = messageBoxService;
+            _generalSettings = generalSettings;
+
             _tasks.CollectionChanged += OnTaskCollectionChanged;
 
             dispatcherTimer.StartTimer(TimeSpan.FromSeconds(1), UpdateRunningTask);
@@ -117,17 +121,18 @@ namespace WhatHaveIDone.Core.ViewModels
             {
                 if (SetProperty(ref _dayInLocalTime, value))
                 {
-                    RaisePropertyChanged(() => DayUtc);
-                    RaisePropertyChanged(() => EndUtc);
+
+                    RaisePropertyChanged(() => DayStart);
+                    RaisePropertyChanged(() => DayEnd);
                 }
             }
         }
 
-        public DateTime DayUtc => DayInLocalTime.ToUniversalTime();
+        public DateTime DayStart =>  DateTime.SpecifyKind(DayInLocalTime.Add(_generalSettings.DayStartTime.ToTimeSpan()), DateTimeKind.Utc);
 
         public IMvxCommand EndTaskCommand { get; }
 
-        public DateTime EndUtc => DayUtc.Add(TimeLineLength);
+        public DateTime DayEnd => DateTime.SpecifyKind(DayInLocalTime.Add(_generalSettings.DayEndTime.ToTimeSpan()), DateTimeKind.Utc);
 
         public bool IsTaskPaused
         {
@@ -210,7 +215,7 @@ namespace WhatHaveIDone.Core.ViewModels
             set { SetProperty(ref _taskStatistics, value); }
         }
 
-        public TimeSpan TimeLineLength => TimeSpan.FromHours(24);
+        public TimeSpan TimeLineLength => _generalSettings.DayEndTime - _generalSettings.DayStartTime;
 
         public Task ChangeDay(DateTime localDateTime)
         {
