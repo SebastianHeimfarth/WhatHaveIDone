@@ -6,6 +6,10 @@
       "Name": "Development",
       "DefaultProperties": [
         {
+          "Name": "Comment",
+          "DefaultValue": ""
+        },
+        {
           "Name": "Cost Center",
           "DefaultValue": "123"
         },

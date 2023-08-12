@@ -116,21 +116,14 @@
                             <Run Text="{Binding CurrentTask.Name, Converter={StaticResource StringToShortStringConverter}, ConverterParameter=15}" FontWeight="Bold" />
                             <Run Text="* paused *" Foreground ="DarkOrange" />
                     </TextBlock>
-                    
+
                     <Button mvx:Bi.nd="Command StopTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource InverseBooleanToVisibilityConverter}}" ToolTip="Stop running Task" >Stop</Button>
 
                     <Button mvx:Bi.nd="Command ContinueTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Continue last Task">Continue</Button>
                     <Button mvx:Bi.nd="Command EndTaskCommand" Visibility="{Binding IsTaskPaused, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="End paused Task">End</Button>
                 </StackPanel>
-                
 
             </StackPanel>
-
-
-
-
-
-
 
             <Grid Grid.Row="3" Grid.Column="1" Visibility="{Binding IsTaskStarted, Converter={StaticResource InverseBooleanToVisibilityConverter}}" Background="{StaticResource HighlightedBackgroundColor}">
                 <Grid.RowDefinitions>
@@ -166,7 +159,8 @@
 
             <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="{StaticResource HighlightedBackgroundColor}" Visibility="{Binding SelectedTask, Converter={StaticResource NotNullToVisibilityConveter}}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
@@ -180,38 +174,59 @@
                 
                 
                 <!--Name-->
-                <StackPanel Grid.Row="0" Grid.Column="0">
+                <StackPanel Grid.Row="2" Grid.Column="0">
                     <TextBlock Text="Name" Style="{StaticResource TextBoxLabelStyle}"/>
-                    <TextBox x:Name="TaskNameEditTextBox"  Style="{StaticResource TextInputStyle}" HorizontalAlignment="Stretch"  Text="{Binding Path=SelectedTask.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+                    <TextBox x:Name="TaskNameEditTextBox" Style="{StaticResource TextInputStyle}" HorizontalAlignment="Stretch"  Text="{Binding Path=SelectedTask.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
                 </StackPanel>
 
                 <!--Type-->
-                <StackPanel Grid.Row="0" Grid.Column="1">
+                <StackPanel Grid.Row="1" Grid.Column="0">
                     <TextBlock Text="Type" Style="{StaticResource TextBoxLabelStyle}"/>
-                    <ComboBox x:Name="CategoryEditComboBox"  Style="{StaticResource ComboBoxStyle}" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedTask.TaskType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Categories, Mode=OneWay}" HorizontalAlignment="Left" Width="100"  />
+                    <ComboBox x:Name="CategoryEditComboBox"  Style="{StaticResource ComboBoxStyle}" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedTask.TaskType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Categories, Mode=OneWay}" HorizontalAlignment="Left"  Width="180" />
                 </StackPanel>
                 
                 <!--Properties-->
-                <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="2">
-                    <TextBlock Text="Properties" Style="{StaticResource TextBoxLabelStyle}"/>
-                    <DataGrid x:Name="_properties" MinHeight="300px" ItemsSource="{Binding SelectedTask.DynamicPropertyValues}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
-                              Background="Transparent" >
-                        <DataGrid.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="BorderThickness" Value="8"/>
-                                
-                                
+                <Border CornerRadius="5" BorderThickness="5" BorderBrush="{StaticResource PrimaryBackgroundColor}"
+                         Grid.Row="1" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="2"
+                        Height="200px" Width="500px" >
+                    <DataGrid x:Name="_properties"  ItemsSource="{Binding SelectedTask.DynamicPropertyValues}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" Background="{StaticResource PrimaryBackgroundColor}" BorderBrush="{StaticResource PrimaryBackgroundColor}"
+                              HeadersVisibility="Column"
+                              HorizontalScrollBarVisibility="Hidden"
+                              Grid.Row="2" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="2"
+                              Width="510"
+                              >
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="{StaticResource PrimaryBackgroundColor}"/>
+                                <Setter Property="HorizontalAlignment" Value="Left" />
+                                <Setter Property="Height" Value="25px" />
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
                             </Style>
-                        </DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="{StaticResource TertiaryBackgroundColor}"/>
+                                <Setter Property="BorderThickness" Value="7"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource TertiaryBackgroundColor}" />
+                            </Style>
+                        </DataGrid.Resources>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" />
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="100">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Background" Value="{StaticResource SecondaryBackgroundColor}"/>
+
+                                        <Setter Property="BorderBrush" Value="{StaticResource SecondaryBackgroundColor}" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" Width="390" />
                         </DataGrid.Columns>
                     </DataGrid>
-                </StackPanel>
+                </Border>
+                
 
                 <!--Start/End-->
-                <Grid Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" HorizontalAlignment="Left"  Margin="10">
+                <Grid Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" HorizontalAlignment="Left"  Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="55"/>
                         <RowDefinition Height="55"/>
@@ -239,11 +254,7 @@
                 <!--Delete-->
                 <Button Content="&#128465;" Grid.Row="0" Grid.Column="2" mvx:Bi.nd="Command DeleteTaskCommand" HorizontalAlignment="Right" Width="40" ToolTip="Delete Task"/>
 
-                <!--Comment-->
-                <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Vertical">
-                    <TextBlock Text="Comment" Style="{StaticResource TextBoxLabelStyle}"/>
-                    <TextBox Text="{Binding SelectedTask.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextInputStyle}" TextWrapping="Wrap" AcceptsReturn="True" />
-                </StackPanel>
+                
                 
 
             </Grid>

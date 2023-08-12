@@ -5,6 +5,7 @@
     
     <SolidColorBrush x:Key="PrimaryBackgroundColor">#59585E</SolidColorBrush>
     <SolidColorBrush x:Key="SecondaryBackgroundColor">#5f87a1</SolidColorBrush>
+    <SolidColorBrush x:Key="TertiaryBackgroundColor">#5f95b8</SolidColorBrush>
 
     <SolidColorBrush x:Key="HighlightedBackgroundColor">#677e80</SolidColorBrush>
     <LinearGradientBrush x:Key="ButtonColor" StartPoint="0,0" EndPoint="0,1">
@@ -40,7 +41,7 @@
 
     <Style x:Key="TextBoxLabelStyle" TargetType="TextBlock">
         <Setter Property="Margin" Value="10 0 0 2"/>
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontFamily" Value="Consolas"/>
     </Style>
 
@@ -116,17 +117,6 @@ VerticalScrollBarVisibility="Hidden"/>
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
         <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
     </ControlTemplate>
-
-
-
-
-
-
-
-
-
-
-
 
     <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
         <Setter Property="Template">

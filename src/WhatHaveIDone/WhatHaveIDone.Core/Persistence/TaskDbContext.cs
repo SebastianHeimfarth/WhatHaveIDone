@@ -37,6 +37,13 @@ namespace WhatHaveIDone.Core.Persistence
         public async Task<TaskModel> CreateTaskAsync(string taskName, TaskType type, string comment, DateTime begin)
         {
             var task = new TaskModel { Name = taskName, Comment = comment, Begin = begin, TaskType = type };
+
+            var commentProperty = task.Properties.FirstOrDefault(x => x.Name == "Comment");
+            if (commentProperty != null && comment != null)
+            {
+                commentProperty.Value = comment;
+            }
+
             await Tasks.AddAsync(task);
             await SaveChangesAsync();
             return task;
