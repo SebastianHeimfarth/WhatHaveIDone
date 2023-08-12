@@ -1,5 +1,6 @@
 ﻿using MvvmCross.ViewModels;
 using System;
+using WhatHaveIDone.Core.Models;
 
 namespace WhatHaveIDone.Core.ViewModels
 {
@@ -17,5 +18,7 @@ namespace WhatHaveIDone.Core.ViewModels
                 _value = value;
             }
         }
+
+        public TaskPropertyType TaskPropertyType { get; init; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using WhatHaveIDone.Persistence;
+using WhatHaveIDone.Core.Persistence;
 
 namespace WhatHaveIDone.Test.Persistence
 {

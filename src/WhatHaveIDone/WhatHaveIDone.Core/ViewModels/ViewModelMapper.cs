@@ -26,7 +26,19 @@ namespace WhatHaveIDone.Core.ViewModels
             {
                 Id = taskProperty.Id,
                 Name = taskProperty.Name,
-                Value = taskProperty.Value
+                Value = taskProperty.Value,
+                TaskPropertyType = taskProperty.TaskPropertyType
+            };
+        }
+
+        public static TaskPropertyViewModel CreateTaskPropertyViewModel(TaskPropertyType type)
+        {
+            return new TaskPropertyViewModel
+            {
+                Id = type.Id,
+                Name = type.Name,
+                Value = type.DefaultValue,
+                TaskPropertyType = type
             };
         }
 
@@ -40,7 +52,7 @@ namespace WhatHaveIDone.Core.ViewModels
 
             foreach(var item in viewModel.DynamicPropertyValues) 
             {                 
-                var taskProperty = task.Properties.Single(x => x.Id == item.Id);
+                var taskProperty = task.Properties.Single(x => x.TaskPropertyType == item.TaskPropertyType);
                 taskProperty.Value = item.Value;
             }
         }

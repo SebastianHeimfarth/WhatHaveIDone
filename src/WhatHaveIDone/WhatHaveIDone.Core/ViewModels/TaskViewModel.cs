@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using WhatHaveIDone.Core.Models;
 
 namespace WhatHaveIDone.Core.ViewModels
@@ -31,6 +32,12 @@ namespace WhatHaveIDone.Core.ViewModels
             get => _taskType;
             set
             {
+                if (_taskType != value)
+                {
+                    DynamicPropertyValues = new ObservableCollection<TaskPropertyViewModel>(
+                        value.DefaultProperties.Select(x=> 
+                        ViewModelMapper.CreateTaskPropertyViewModel(x)));
+                }
                 SetProperty(ref _taskType, value);
             }
         }

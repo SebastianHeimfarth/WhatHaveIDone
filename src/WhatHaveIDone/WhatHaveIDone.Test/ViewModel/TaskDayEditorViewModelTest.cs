@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using WhatHaveIDone.Core;
 using WhatHaveIDone.Core.CoreAbstractions;
+using WhatHaveIDone.Core.Persistence;
 using WhatHaveIDone.Core.ViewModels;
-using WhatHaveIDone.Persistence;
 using WhatHaveIDone.Test.Persistence;
 
 namespace WhatHaveIDone.Test.ViewModel

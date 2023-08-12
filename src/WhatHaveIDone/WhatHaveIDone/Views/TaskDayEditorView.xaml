@@ -194,10 +194,18 @@
                 <!--Properties-->
                 <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="2">
                     <TextBlock Text="Properties" Style="{StaticResource TextBoxLabelStyle}"/>
-                    <DataGrid x:Name="_properties" MinHeight="300px" ItemsSource="{Binding SelectedTask.DynamicPropertyValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False">
+                    <DataGrid x:Name="_properties" MinHeight="300px" ItemsSource="{Binding SelectedTask.DynamicPropertyValues}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
+                              Background="Transparent" >
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="8"/>
+                                
+                                
+                            </Style>
+                        </DataGrid.CellStyle>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="False" />
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>

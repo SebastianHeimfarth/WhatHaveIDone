@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WhatHaveIDone.Core.Models;
-using WhatHaveIDone.Persistence;
 
 namespace WhatHaveIDone.Test.Persistence
 {

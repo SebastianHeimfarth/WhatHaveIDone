@@ -9,7 +9,6 @@ using WhatHaveIDone.Core.Persistence;
 using WhatHaveIDone.Core.ViewModels;
 using WhatHaveIDone.CoreAbstractions;
 using WhatHaveIDone.Notification;
-using WhatHaveIDone.Persistence;
 using WhatHaveIDone.Views;
 
 namespace WhatHaveIDone
